@@ -11,7 +11,7 @@ import boardsSlice from '../Redux/boardsSlice'
 function HeaderDropdown({setOpenDropdown , setBoardModalOpen}){
   const [colorTheme , setTheme] = useDarkMode() ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
   const [darkSide, setdarkSide] = useState(colorTheme === 'light' ? true : false) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
-  const dispatch = useDispatch()
+  const dispatch = useDispatch() 
 
   const toggleDarkMode = (checked) => { ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
     setTheme(colorTheme) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
@@ -47,7 +47,7 @@ function HeaderDropdown({setOpenDropdown , setBoardModalOpen}){
             className={`dark:text-white flex items-baseline space-x-2 px-5 py-4 ${board.isActive && 'bg-[#416555] rounded-r-full text-white mr-8'}`}
             key={index}
             onClick={() => {
-              dispatch(boardsSlice.actions.setBoardActive({index}))
+              dispatch(boardsSlice.actions.setBoardActive({index})) 
             }}
             >
           
