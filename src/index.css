@@ -16,3 +16,11 @@ body{
 
   }
 }
+
+.select-status {
+  background-image: url('./Assets/icon-chevron-down.svg');
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 16px top 50%;
+  
+}

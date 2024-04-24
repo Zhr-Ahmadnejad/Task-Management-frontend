@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 
 import logo from '../Assets/logo.png'
-import icondown from '../Assets/icondown.png'
-import iconup from '../Assets/iconup.png'
+import icondown from '../Assets/icon-chevron-down.svg'
+import iconup from '../Assets/icon-chevron-up.svg'
 import elipsis from '../Assets/elipsis3.png'
 import HeaderDropdown from './HeaderDropdown'
 import AddEditBoardModal from '../Modals/AddEditBoardModal'
 import { useDispatch, useSelector } from 'react-redux'
+import AddEditTaskModal from '../Modals/AddEditTaskModal'
 
 
 ///creat Header component
@@ -18,6 +19,7 @@ function Header({ setBoardModalOpen , boardModalOpen}) {
   /// use hook useState for manage dropdown
 const [openDropdown, setOpenDropdown] = useState(false)
 const [ boardType , setBoardType ] = useState('add')
+const [openAddEditTassk, setOpenAddEditTassk] = useState(false)
 
 const boards = useSelector( (state) => state.boards)
 const board = boards.find(board => board.isActive)
@@ -46,7 +48,13 @@ const board = boards.find(board => board.isActive)
             + Add New Task
           </button>
 
-          <button className='button py-1 px-3 md:hidden'>
+          <button
+          onClick={
+            () => {
+              setOpenAddEditTassk(state => !state)
+            }
+          }
+          className='button py-1 px-3 md:hidden'>
             +
           </button>
           <img src={elipsis} alt='' width="53" height="26" className='cursor-pointer'/>
@@ -60,6 +68,10 @@ const board = boards.find(board => board.isActive)
       }
       {
       boardModalOpen && <AddEditBoardModal type={boardType} setBoardModalOpen = {setBoardModalOpen}/>//setBoardModalOpen RO be AddEditBoaedModal pas mide
+      }
+
+      {
+        openAddEditTassk && <AddEditTaskModal setOpenAddEditTassk={setOpenAddEditTassk} device='mobile' type='add'/>
       }
     </div>
   )
