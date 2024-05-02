@@ -1,13 +1,17 @@
 import React, {useState} from 'react'
 import {v4 as uuidv4 } from 'uuid'
 import crossIcon from "../Assets/crossIcone.png"
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import boardSlices from '../Redux/boardsSlice'
 
 function AddEditBoardModal({setBoardModalOpen , type , }) {
   const [name, setname] = useState('')
   const [isValid, setIsValid] = useState(true)
+  const [isFirstLoad, setIsFirstLoad] = useState(true)
   const dispatch = useDispatch()
+  const board = useSelector( (state) => state.boards).find(
+  (board) => board.isActive
+  )
 
   const [newColumns, setnewColumns] = useState(
     [
@@ -15,6 +19,16 @@ function AddEditBoardModal({setBoardModalOpen , type , }) {
       {name : 'Doing' , task : [] , id : uuidv4()},
     ]
   )
+
+  if (type === 'edit' && isFirstLoad){
+    setnewColumns(
+      board.columns.map((col) => {
+        return { ...col , id : uuidv4()}
+      })
+    )
+    setname(board.name)
+    setIsFirstLoad(false)
+  }
 
   const onChange = (id , newValue ) => {
     setnewColumns((pervState) => {
