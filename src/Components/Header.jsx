@@ -23,7 +23,7 @@ function Header({ setBoardModalOpen , boardModalOpen}) {
 const [openDropdown, setOpenDropdown] = useState(false)
 const [ boardType , setBoardType ] = useState('add')
 const [openAddEditTassk, setOpenAddEditTassk] = useState(false)
-const [isElipsisOpen, setIsElipsisOpen] = useState(false)
+const [isElipsisMenuOpen, setIsElipsisMenuOpen] = useState(false);
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
 const boards = useSelector( (state) => state.boards)
@@ -31,12 +31,12 @@ const board = boards.find(board => board.isActive)
 
  const setOpenEditModal = () => {
   setBoardModalOpen(true)
-  setIsElipsisOpen(false)
+  setIsElipsisMenuOpen(false)
 }
 
 const setOpenDeleteModal = () => {
   setIsDeleteModalOpen(true)
-  setIsElipsisOpen(false)
+  setIsElipsisMenuOpen(false)
 }
 
 const onDeleteBtnClick = () => {
@@ -89,14 +89,17 @@ const onDropdownClick = () => {
           className='button py-1 px-3 md:hidden'>
             +
           </button>
-          <img src={elipsis} onClick={() => {
-            setBoardType('edit')
-            setOpenDropdown(false)
-            setIsElipsisOpen(state => !state)
-          }} alt='elipsis' width="53" height="26" className='cursor-pointer '/>
+          <img
+            onClick={() => {
+              setIsElipsisMenuOpen((prevState) => !prevState);
+            }}
+            src={elipsis}
+            alt="elipsis"
+            className=" cursor-pointer h-6"
+          />
 
           {
-            isElipsisOpen && <ElipsisMenu
+            isElipsisMenuOpen && <ElipsisMenu
             setOpenDeleteModal={setOpenDeleteModal}
             setOpenEditModal={setOpenEditModal}
              type='Boards'/>

@@ -44,7 +44,7 @@ function HeaderDropdown({setOpenDropdown , setBoardModalOpen}){
         <div>
           {boards.map((board , index) =>(
             <div
-            className={`dark:text-white flex items-baseline space-x-2 px-5 py-4 ${board.isActive && 'bg-[#416555] rounded-r-full text-white mr-8'}`}
+            className={`cursor-pointer dark:text-white flex items-baseline space-x-2 px-5 py-4 ${board.isActive && 'bg-[#416555] rounded-r-full text-white mr-8'}`}
             key={index}
             onClick={() => {
               dispatch(boardsSlice.actions.setBoardActive({index}))
