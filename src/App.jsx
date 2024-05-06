@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "./Components/Header";
-// import Home from "./Components/Home";
+import Center from "./Components/Center";
 import EmptyBoard from './Components/EmptyBoard';
 import boardsSlice from "./Redux/boardsSlice";
 
 function App() {
-  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const [boardModalOpen, setBoardModalOpen] = useState(false);
   const dispatch = useDispatch();
   const boards = useSelector((state) => state.boards);
   const activeBoard = boards.find((board) => board.isActive);
@@ -18,13 +18,13 @@ function App() {
         {boards.length > 0 ?
         <>
         <Header
-          setIsBoardModalOpen={setIsBoardModalOpen}
-          isBoardModalOpen={isBoardModalOpen}
+          setBoardModalOpen={setBoardModalOpen}
+          boardModalOpen={boardModalOpen}
         />
-        {/* <Home
-          setIsBoardModalOpen={setIsBoardModalOpen}
-          isBoardModalOpen={isBoardModalOpen}
-        /> */}
+        <Center
+        setBoardModalOpen={setBoardModalOpen}
+        boardModalOpen={boardModalOpen}
+        />
         </>
         :
         <>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function DeleteModal({ type, title, onDeleteBtnClick, setIsDeleteModalOpen }) {
+function DeleteModal({ type, title, onDeleteBtnClick, isDeleteModalOpen, toggleDeleteModal }) {
   return (
     // Modal Container
     <div
@@ -8,9 +8,9 @@ function DeleteModal({ type, title, onDeleteBtnClick, setIsDeleteModalOpen }) {
         if (e.target !== e.currentTarget) {
           return;
         }
-        setIsDeleteModalOpen(false);
+        toggleDeleteModal();
       }}
-      className="fixed right-0 top-0 px-2 py-4 overflow-scroll scrollbar-hide  z-50 left-0 bottom-0 justify-center items-center flex dropdown"
+      className="fixed right-0 top-0 px-2 py-4 overflow-scroll scrollbar-hide  z-50 left-0 bottom-0 justify-center items-center flex dropdown bg-[#00000080]"
     >
       {/* Delete Modal  */}
 
@@ -38,9 +38,7 @@ function DeleteModal({ type, title, onDeleteBtnClick, setIsDeleteModalOpen }) {
             Delete
           </button>
           <button
-            onClick={() => {
-              setIsDeleteModalOpen(false)
-            }}
+            onClick={toggleDeleteModal}
             className="w-full items-center text-[#416555] dark:bg-white hover:opacity-75 bg-[#635fc71a]  py-2 rounded-full"
           >
             Cancel
