@@ -59,7 +59,7 @@ const onDropdownClick = () => {
       
         {/* Left Side */}
         <div className=' flex items-center space-x-2 md:space-x-4'>
-          {/* <img src={logo} alt='logo' width="300" height="126" className=' hidden md:inline-block'/> */}
+          <img src={logo} alt='logo' width="300" height="200" className=' hidden md:inline-block'/>
           <div className='flex items-center'>
             <h3 className=' truncate max-w-[200px] md:text-2xl text-xl font-bold md:ml-20 font-sans text-white'>
                {board.name}

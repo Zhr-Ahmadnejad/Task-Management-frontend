@@ -24,3 +24,7 @@ body{
   background-position: right 16px top 50%;
   
 }
+
+.bg-white {
+  background-color: #fff;
+}

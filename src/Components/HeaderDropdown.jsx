@@ -6,6 +6,8 @@ import darkIcon from '../Assets/icon-dark-theme.svg'
 import { Switch } from '@headlessui/react'
 import useDarkMode from '../Hooks/useDarkMode'
 import boardsSlice from '../Redux/boardsSlice'
+import SignoutIcon from '../Assets/sign_out_icon.jpg'
+import aboutUsIcon from '../Assets/about-us-icon_final.jpg';
 
 
 function HeaderDropdown({setOpenDropdown , setBoardModalOpen}){
@@ -68,8 +70,31 @@ function HeaderDropdown({setOpenDropdown , setBoardModalOpen}){
               Create New Board
             </p>
           </div>
+          {/* About us Button  */}
+                   
+          <div 
+                     onClick={() => {
+                     window.location.href = '/aboutUs'; // استفاده از window.location.href برای هدایت به صفحه ورود
+                     }}
+                    className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
+                    text-[#416555] px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
+                     <img src={aboutUsIcon} alt='signout' className='h-4'/>
+                     <p className=' text-lg font-bold'>
+                     About Us
+                      </p> 
+                    </div>
+          <div 
+                     onClick={() => {
+                     window.location.href = '/'; // استفاده از window.location.href برای هدایت به صفحه ورود
+                     }}
+                    className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
+                     text-red-700 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
+                     <img src={SignoutIcon} alt='signout' className='h-4'/>
+                     <p className=' text-lg font-bold'>
+                      Sign Out
+                      </p> 
+                    </div>
 
-         
           <div className=" mx-2  p-4  space-x-2 bg-slate-100 dark:bg-[#20212c] flex justify-center items-center rounded-lg">
             <img src={lightIcon} alt="sun indicating light mode" />
 
