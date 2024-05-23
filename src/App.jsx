@@ -8,6 +8,7 @@ import boardsSlice from "./Redux/boardsSlice";
 import LoginPage from "./Components/LoginPage";
 import SignupPage from "./Components/SignupPage";
 import AboutUs from "./Components/AboutUs";
+import ProfilePage from "./Components/ProfilePage";
 
 function App() {
   const [boardModalOpen, setBoardModalOpen] = useState(false);
@@ -43,6 +44,7 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage/>} />
             <Route path="/aboutUs" element={<AboutUs/>} />
+            <Route path="/ProfilePage" element={<ProfilePage/>}/>
           </Routes>
         </Router>
 

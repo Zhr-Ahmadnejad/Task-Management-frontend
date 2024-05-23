@@ -83,6 +83,20 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
                       </p> 
                     </div>
 
+                  {/* Setting Button  */}
+
+                  <div 
+                     onClick={() => {
+                     window.location.href = '/ProfilePage'; // استفاده از window.location.href برای هدایت به صفحه ورود
+                     }}
+                    className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
+                    text-green-300 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
+                     <img src={aboutUsIcon} alt='signout' className='h-4'/>
+                     <p className=' text-lg font-bold'>
+                     Setting
+                      </p> 
+                    </div>
+
                    {/* Sign Out Button */}
                    <div 
                      onClick={() => {
