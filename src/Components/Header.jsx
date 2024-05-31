@@ -23,8 +23,9 @@ function Header({ setBoardModalOpen , boardModalOpen}) {
 const [openDropdown, setOpenDropdown] = useState(false)
 const [ boardType , setBoardType ] = useState('add')
 const [openAddEditTassk, setOpenAddEditTassk] = useState(false)
-const [isElipsisMenuOpen, setIsElipsisMenuOpen] = useState(false);
+const [isElipsisMenuOpen, setIsElipsisMenuOpen] = useState(false)
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
 
 const boards = useSelector( (state) => state.boards)
 const board = boards.find(board => board.isActive)
@@ -39,10 +40,13 @@ const setOpenDeleteModal = () => {
   setIsElipsisMenuOpen(false)
 }
 
-const onDeleteBtnClick = () => {
+const onDeleteBtnClick = (e) => {
+  if(e.target.textContent === "Delete"){
   dispatch ( boardsSlice.actions.deleteBoard())
   dispatch ( boardsSlice.actions.setBoardActive({index : 0}))
-  setIsDeleteModalOpen(false)
+  setIsDeleteModalOpen(false)}else{
+    setIsDeleteModalOpen(false)
+  }
 }
 
 const onDropdownClick = () => {
@@ -73,7 +77,7 @@ const onDropdownClick = () => {
         <div className=' flex items-center space-x-4 md:space-x-6 '>
           <button onClick={
             () => {
-              setOpenAddEditTassk(state => !state)
+              setIsTaskModalOpen((prevState) => !prevState)
             }
           }
           className='hidden md:block button'>
@@ -83,7 +87,8 @@ const onDropdownClick = () => {
           <button
           onClick={
             () => {
-              setOpenAddEditTassk(state => !state)
+              // setOpenAddEditTassk(state => !state)
+              setIsTaskModalOpen((prevState) => !prevState)
             }
           }
           className='button py-1 px-3 md:hidden'>
@@ -91,6 +96,8 @@ const onDropdownClick = () => {
           </button>
           <img
             onClick={() => {
+              setBoardType("edit");
+              setOpenDropdown(false)
               setIsElipsisMenuOpen((prevState) => !prevState);
             }}
             src={elipsis}
@@ -107,23 +114,26 @@ const onDropdownClick = () => {
 
 
         </div>
-
-      </header>
       {
       openDropdown && <HeaderDropdown setBoardModalOpen={setBoardModalOpen} setOpenDropdown = {setOpenDropdown}/>
       }
+      </header>
+      
       {
-      boardModalOpen && <AddEditBoardModal type={boardType} setBoardModalOpen = {setBoardModalOpen}/>//setBoardModalOpen RO be AddEditBoaedModal pas mide
+        isTaskModalOpen && (
+          <AddEditTaskModal setIsAddTaskModalOpen={setIsTaskModalOpen} type="add" device="mobile"/>
+        )
       }
-
       {
-        openAddEditTassk && <AddEditTaskModal setOpenAddEditTassk={setOpenAddEditTassk} device='mobile' type='add'/>
+        boardModalOpen && (
+          <AddEditBoardModal setBoardType={setBoardType} type={boardType} setBoardModalOpen={setBoardModalOpen}/>
+        )
       }
       {
-        isDeleteModalOpen && <DeleteModal setIsDeleteModalOpen={setIsDeleteModalOpen}
-        type="board"
-        title={board.name}
-        onDeleteBtnClick={onDeleteBtnClick}/>
+        isDeleteModalOpen && (
+          <DeleteModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen} type="board" title={board.name} onDeleteBtnClick={onDeleteBtnClick}/>
+        )
       }
     </div>
   )

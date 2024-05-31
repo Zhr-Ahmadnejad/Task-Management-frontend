@@ -39,8 +39,24 @@ function ProfilePage() {
   };
 
   const handleSave = () => {
-    // ارسال اطلاعات به سرور برای به روزرسانی
-    setEditMode(false);
+    const token = localStorage.getItem('token');
+    axios.put('http://localhost:8088/api/users', {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log('User updated successfully:', response.data);
+      setEditMode(false);
+    })
+    .catch(error => {
+      console.error('Error updating user:', error);
+    });
   };
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#416555] dark:bg-white">

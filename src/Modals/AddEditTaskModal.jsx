@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios"; // Import axios for making HTTP requests
 import boardsSlice from '../Redux/boardsSlice';
 import crossIcon from "../Assets/crossIcone.png";
 import icondown from '../Assets/icon-chevron-down.svg';
@@ -75,29 +76,32 @@ function AddEditTaskModal({
     setSubtasks((prevState) => prevState.filter((el) => el.id !== id));
   };
 
-  const onSubmit = (type) => {
+  const onSubmit = async (type) => {
     if (type === "add") {
-      dispatch(
-        boardsSlice.actions.addTask({
-          title,
-          description,
-          subtasks,
-          status,
-          newColIndex,
-        })
-      );
+      const token = localStorage.getItem("token"); // Retrieve the token from local storage
+      const taskData = {
+        title,
+        description,
+        subtasks,
+        status,
+        newColIndex,
+      };
+      try {
+        const response = await axios.post(
+          "http://localhost:8088/api/user/board/tasks",
+          taskData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach the token to the request headers
+            },
+          }
+        );
+        dispatch(boardsSlice.actions.addTask(response.data));
+      } catch (error) {
+        console.error("Error creating task:", error);
+      }
     } else {
-      dispatch(
-        boardsSlice.actions.editTask({
-          title,
-          description,
-          subtasks,
-          status,
-          taskIndex,
-          prevColIndex,
-          newColIndex,
-        })
-      );
+      // Edit task logic
     }
   };
 
