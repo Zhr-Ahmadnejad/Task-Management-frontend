@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../Assets/logo-color.png';
+import axios from "axios";
+import Cookies from "js-cookie";
+import {useNavigate} from "react-router-dom"
+import {toast} from "react-toastify";
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await fetch('http://localhost:8088/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.text();
-      if (response.ok) {
-        localStorage.setItem('token', data); 
-        console.log('Token:', data);
-        window.location.href = '/home';
-      } else {
-        setError(data);
-      }      
+      const {data} = await axios.post('http://localhost:8088/api/login',{
+        email, password
+      })
+
+      Cookies.set('token', data, { expires: 7 })
+      navigate("/home");
+
+     setError("")
+      const notify = () => toast("Welcome");
+      notify()
+
     } catch (error) {
-      console.error('Error:', error);
-      setError('خطایی در ارتباط با سرور رخ داده است.');
+      console.error('Error:', error.response.data);
+      setError(error.response.data);
     }
-  };  
+
+  };
 
   return (
     <div className="h-screen flex justify-center items-center bg-[#416555]">

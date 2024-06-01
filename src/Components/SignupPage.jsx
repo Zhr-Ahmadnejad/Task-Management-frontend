@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../Assets/logo-color.png'; // مسیر لوگو
+import logo from '../Assets/logo-color.png';
+import axios from "axios"; // مسیر لوگو
 
 function SignupPage() {
   const [email, setEmail] = useState('');
@@ -12,21 +13,22 @@ function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8088/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, firstName, lastName }), // افزودن اطلاعات firstName و lastName
-      });
-      const data = await response.text();
-      if (response.ok) {
-        // Signup successful, redirect to login page or perform other actions
-        window.location.href = '/'; // به عنوان مثال به صفحه اصلی هدایت می‌شود
-      } else {
-        // Display error message received from the server
-        setError(data);
-      }
+      const response = await axios.post('http://localhost:8088/api/register',{
+        email, password, firstName, lastName
+      })
+
+      setError('');
+
+      // console.log(response.status === 200)
+      console.log(response)
+      // const data = await response.text();
+      // if (response.ok) {
+      //   // Signup successful, redirect to login page or perform other actions
+      //   window.location.href = '/'; // به عنوان مثال به صفحه اصلی هدایت می‌شود
+      // } else {
+      //   // Display error message received from the server
+      //   setError(data);
+      // }
     } catch (error) {
       console.error('Error:', error);
       setError('خطایی در ارتباط با سرور رخ داده است.');

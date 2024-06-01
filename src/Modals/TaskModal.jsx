@@ -6,6 +6,7 @@ import boardsSlice from "../Redux/boardsSlice";
 import Subtask from "../Components/Subtask";
 import AddEditTaskModal from "./AddEditTaskModal";
 import DeleteModal from "./DeleteModal";
+import XIcon from "../Components/icons/x-icon.jsx";
 
 function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
   const dispatch = useDispatch();
@@ -33,9 +34,11 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
   };
 
   const onClose = (e) => {
+
     if (e.target !== e.currentTarget) {
       return;
     }
+
     dispatch(
       boardsSlice.actions.setTaskStatus({
         taskIndex,
@@ -47,6 +50,18 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
     setIsTaskModalOpen(false);
   };
 
+  const closeHandler = ()=>{
+    dispatch(
+        boardsSlice.actions.setTaskStatus({
+          taskIndex,
+          colIndex,
+          newColIndex,
+          status,
+        })
+    );
+    setIsTaskModalOpen(false);
+  }
+
   const onDeleteBtnClick = (e) => {
     if (e.target.textContent === "Delete") {
       dispatch(boardsSlice.actions.deleteTask({ taskIndex, colIndex }));
@@ -56,7 +71,7 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
       setIsDeleteModalOpen(false);
     }
   };
-  
+
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
   const setOpenEditModal = () => {
@@ -80,24 +95,31 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
     >
       {/* MODAL SECTION */}
 
-      <div className=" scrollbar-hide overflow-y-scroll max-h-[95vh] shadow-[#364e7e1a]  my-auto bg-[#416555] dark:bg-[#2b2c37] text-white dark:text-black font-bold shadow-md max-w-md mx-auto  w-full px-8  py-8 rounded-xl">
-        <div className=" relative flex   justify-between w-full items-center">
+
+      <div
+          className=" scrollbar-hide overflow-y-scroll max-h-[95vh] shadow-[#364e7e1a]  my-auto bg-[#416555] dark:bg-[#2b2c37] text-white dark:text-black font-bold shadow-md max-w-md mx-auto  w-full px-8  py-8 rounded-xl">
+
+        <button onClick={closeHandler}>
+          <XIcon classes={"w-10"}/>
+        </button>
+
+        <div className=" relative flex justify-between w-full items-center">
           <h1 className=" text-lg">{task.title}</h1>
 
           <img
-            onClick={() => {
-              setIsElipsisMenuOpen((prevState) => !prevState);
-            }}
-            src={elipsis}
-            alt="elipsis"
-            className=" cursor-pointer h-6"
+              onClick={() => {
+                setIsElipsisMenuOpen((prevState) => !prevState);
+              }}
+              src={elipsis}
+              alt="elipsis"
+              className=" cursor-pointer h-6"
           />
           {isElipsisMenuOpen && (
-            <ElipsisMenu
-              setOpenEditModal={setOpenEditModal}
-              setOpenDeleteModal={setOpenDeleteModal}
-              type="Task"
-            />
+              <ElipsisMenu
+                  setOpenEditModal={setOpenEditModal}
+                  setOpenDeleteModal={setOpenDeleteModal}
+                  type="Task"
+              />
           )}
         </div>
         <p className=" text-green-300 dark:text-gray-500 font-[600] tracking-wide text-xs pt-6 ">
@@ -113,12 +135,12 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
         <div className=" mt-3 space-y-2 ">
           {subtasks.map((subtask, index) => {
             return (
-              <Subtask
-                index={index}
-                taskIndex={taskIndex}
-                colIndex={colIndex}
-                key={index}
-              />
+                <Subtask
+                    index={index}
+                    taskIndex={taskIndex}
+                    colIndex={colIndex}
+                    key={index}
+                />
             );
           })}
         </div>
@@ -130,21 +152,21 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
             Current Status
           </label>
           <select
-            className="cursor-pointer select-status flex-grow px-4 py-2 rounded-md text-sm focus:border-0  border-[1px] border-gray-300 focus:outline-white outline-none text-black"
-            value={status}
-            onChange={onChange}
+              className="cursor-pointer select-status flex-grow px-4 py-2 rounded-md text-sm focus:border-0  border-[1px] border-gray-300 focus:outline-white outline-none text-black"
+              value={status}
+              onChange={onChange}
           >
             {columns.map((col, index) => (
-              <option className="status-options" key={index}>
-                {col.name}
-              </option>
+                <option className="status-options" key={index}>
+                  {col.name}
+                </option>
             ))}
           </select>
         </div>
       </div>
       {isDeleteModalOpen && (
-        <DeleteModal
-          onDeleteBtnClick={onDeleteBtnClick}
+          <DeleteModal
+              onDeleteBtnClick={onDeleteBtnClick}
           type="task"
           title={task.title}
           isDeleteModalOpen={isDeleteModalOpen}

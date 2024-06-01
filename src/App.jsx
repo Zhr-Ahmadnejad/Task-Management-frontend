@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route ,Navigate} from "react-router-dom";
 import Header from "./Components/Header";
 import Center from "./Components/Center";
 import EmptyBoard from './Components/EmptyBoard';
@@ -9,6 +9,9 @@ import LoginPage from "./Components/LoginPage";
 import SignupPage from "./Components/SignupPage";
 import AboutUs from "./Components/AboutUs";
 import ProfilePage from "./Components/ProfilePage";
+import Cookies from "js-cookie";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [boardModalOpen, setBoardModalOpen] = useState(false);
@@ -20,31 +23,37 @@ function App() {
     dispatch(boardsSlice.actions.setBoardActive({ index: 0 }));
   }
 
+
+
+  const tokenData =  Cookies.get('token')
+
+    // console.log(tokenData);
+
   return (
     <div className="overflow-hidden overflow-x-scroll">
       <>
         <Router>
           <Routes>
             <Route path="/home" element={
-              boards.length > 0 ? (
-                <>
-                  <Header
-                    setBoardModalOpen={setBoardModalOpen}
-                    boardModalOpen={boardModalOpen}
-                  />
-                  <Center
-                    setBoardModalOpen={setBoardModalOpen}
-                    boardModalOpen={boardModalOpen}
-                  />
-                </>
-              ) : (
-                <EmptyBoard type='add'/>
-              )
+                boards.length > 0 ? (
+                    <>
+                        <Header
+                            setBoardModalOpen={setBoardModalOpen}
+                            boardModalOpen={boardModalOpen}
+                        />
+                        <Center
+                            setBoardModalOpen={setBoardModalOpen}
+                            boardModalOpen={boardModalOpen}
+                        />
+                    </>
+                ) : (
+                    <EmptyBoard type='add'/>
+                )
             } />
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage/>} />
-            <Route path="/aboutUs" element={<AboutUs/>} />
-            <Route path="/ProfilePage" element={<ProfilePage/>}/>
+            <Route path="/aboutUs" element={tokenData ? <AboutUs/> : <Navigate to="/" />} />
+            <Route path="/ProfilePage" element={tokenData ? <ProfilePage/> : <Navigate to="/" />}/>
           </Routes>
         </Router>
 
@@ -56,6 +65,7 @@ function App() {
           Sign Out
         </div> */}
       </>
+        <ToastContainer />
     </div>
   );
 }

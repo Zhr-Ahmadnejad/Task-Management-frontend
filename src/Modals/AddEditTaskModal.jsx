@@ -5,6 +5,7 @@ import axios from "axios"; // Import axios for making HTTP requests
 import boardsSlice from '../Redux/boardsSlice';
 import crossIcon from "../Assets/crossIcone.png";
 import icondown from '../Assets/icon-chevron-down.svg';
+import XIcon from "../Components/icons/x-icon.jsx";
 
 function AddEditTaskModal({
   type,
@@ -105,6 +106,14 @@ function AddEditTaskModal({
     }
   };
 
+
+  const closeHandler = (e) => {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    setIsAddTaskModalOpen(false);
+  }
+
   return (
     <div
       className={
@@ -112,19 +121,19 @@ function AddEditTaskModal({
           ? "  py-6 px-6 pb-40  absolute overflow-y-scroll  left-0 flex  right-0 bottom-[-100vh] top-0 dropdown bg-[#00000080] "
           : "  py-6 px-6 pb-40  absolute overflow-y-scroll  left-0 flex  right-0 bottom-0 top-0 dropdown  bg-[#00000080]"
       }
-      onClick={(e) => {
-        if (e.target !== e.currentTarget) {
-          return;
-        }
-        setIsAddTaskModalOpen(false);
-      }}
+      onClick={closeHandler}
     >
       {/* Modal Section */}
 
       <div
-        className=" scrollbar-hide overflow-y-scroll max-h-[95vh]  my-auto  bg-white dark:bg-[#2b2c37] text-black dark:text-white font-bold
+          className=" scrollbar-hide overflow-y-scroll max-h-[95vh]  my-auto  bg-white dark:bg-[#2b2c37] text-black dark:text-white font-bold
        shadow-md shadow-[#364e7e1a] max-w-md mx-auto  w-full px-8  py-8 rounded-xl"
       >
+
+        <button onClick={()=> setIsAddTaskModalOpen(false)}>
+          <XIcon classes={"w-10"}/>
+        </button>
+
         <h3 className=" text-lg ">
           {type === "edit" ? "Edit" : "Add New"} Task
         </h3>
@@ -136,12 +145,12 @@ function AddEditTaskModal({
             Task Name
           </label>
           <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            id="task-name-input"
-            type="text"
-            className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-1  ring-0  "
-            placeholder=" e.g Take coffee break"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              id="task-name-input"
+              type="text"
+              className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-1  ring-0  "
+              placeholder=" e.g Take coffee break"
           />
         </div>
 
@@ -151,12 +160,12 @@ function AddEditTaskModal({
             Description
           </label>
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            id="task-description-input"
-            className=" bg-transparent outline-none min-h-[200px] focus:border-0 px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-[1px] "
-            placeholder="e.g. It's always good to take a break. This 
-            15 minute break will  recharge the batteries 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              id="task-description-input"
+              className=" bg-transparent outline-none min-h-[200px] focus:border-0 px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-[1px] "
+              placeholder="e.g. It's always good to take a break. This
+            15 minute break will  recharge the batteries
             a little."
           />
         </div>
@@ -169,34 +178,34 @@ function AddEditTaskModal({
           </label>
 
           {subtasks.map((subtask, index) => (
-            <div key={index} className=" flex items-center w-full ">
-              <input
-                onChange={(e) => {
-                  onChangeSubtasks(subtask.id, e.target.value);
-                }}
-                type="text"
-                value={subtask.title}
-                className=" bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-[1px]  "
-                placeholder=" e.g Take coffee break"
-              />
-              <img
-                src={crossIcon}
-                onClick={() => {
-                  onDelete(subtask.id);
-                }}
-                className=' w-5 h-5 cursor-pointer m-4'
-              />
-            </div>
+              <div key={index} className=" flex items-center w-full ">
+                <input
+                    onChange={(e) => {
+                      onChangeSubtasks(subtask.id, e.target.value);
+                    }}
+                    type="text"
+                    value={subtask.title}
+                    className=" bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-[1px]  "
+                    placeholder=" e.g Take coffee break"
+                />
+                <img
+                    src={crossIcon}
+                    onClick={() => {
+                      onDelete(subtask.id);
+                    }}
+                    className=' w-5 h-5 cursor-pointer m-4'
+                />
+              </div>
           ))}
 
           <button
-            className=" w-full items-center dark:text-[#416555] dark:bg-white  text-white bg-[#416555] py-2 rounded-full "
-            onClick={() => {
-              setSubtasks((state) => [
-                ...state,
-                { title: "", isCompleted: false, id: uuidv4() },
-              ]);
-            }}
+              className=" w-full items-center dark:text-[#416555] dark:bg-white  text-white bg-[#416555] py-2 rounded-full "
+              onClick={() => {
+                setSubtasks((state) => [
+                  ...state,
+                  {title: "", isCompleted: false, id: uuidv4()},
+                ]);
+              }}
           >
             + Add New Subtask
           </button>
@@ -210,12 +219,12 @@ function AddEditTaskModal({
             Current Status
           </label>
           <select
-            value={status}
-            onChange={onChangeStatus}
-            className=" select-status cursor-pointer flex-grow px-4 py-2 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#416555] outline-none"
+              value={status}
+              onChange={onChangeStatus}
+              className=" select-status cursor-pointer flex-grow px-4 py-2 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#416555] outline-none"
           >
             {columns.map((column, index) => (
-              <option key={index}>{column.name}</option>
+                <option key={index}>{column.name}</option>
             ))}
           </select>
 
@@ -224,17 +233,17 @@ function AddEditTaskModal({
 
 
           <button
-            onClick={() => {
-              const isValid = validate();
-              if (isValid) {
-                onSubmit(type);
-                setIsAddTaskModalOpen(false);
-                type === "edit" && setIsTaskModalOpen(false);
-              }
-            }}
-            className=" w-full items-center text-white bg-[#416555] py-2 rounded-full "
+              onClick={() => {
+                const isValid = validate();
+                if (isValid) {
+                  onSubmit(type);
+                  setIsAddTaskModalOpen(false);
+                  type === "edit" && setIsTaskModalOpen(false);
+                }
+              }}
+              className=" w-full items-center text-white bg-[#416555] py-2 rounded-full "
           >
-           {type === "edit" ? " save edit" : "Create task"}
+            {type === "edit" ? " save edit" : "Create task"}
           </button>
         </div>
       </div>

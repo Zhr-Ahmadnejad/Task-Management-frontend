@@ -13,10 +13,10 @@ import SignoutIcon from '../Assets/sign_out_icon.jpg';
 import aboutUsIcon from '../Assets/about-us-icon_final.jpg';
 
 function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
-  const [colorTheme , setTheme] = useDarkMode() 
+  const [colorTheme , setTheme] = useDarkMode()
   const dispatch =useDispatch()
-  const [darkSide, setdarkSide] = useState(colorTheme === 'light' ? true : false) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
-  
+  const [darkSide, setdarkSide] = useState(colorTheme === 'light') ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
+
   const toggleDarkMode = (checked) => { ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
     setTheme(colorTheme) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
     setdarkSide(checked) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
@@ -27,8 +27,7 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
 
   return (
     <div>
-    <div className={ isSideBarOpen ? ' min-w-[261px] bg-[#416555] dark:bg-[#2b2c37] fixed top-[72px] h-screen items-center left-0 z-20 ' 
-    : ' bg-[#635] dark:bg-[#635fc71a] dark:hover:bg-[#416555] top-auto bottom-10 justify-center items-center hover:opacity-80 cursor-pointer p-0 transition duration-300 transform fixed w-[56px] h-[48px] rounded-r-full'}
+    <div className={ isSideBarOpen ? ' min-w-[261px] bg-[#416555] dark:bg-[#2b2c37] fixed top-[72px] h-screen items-center left-0 z-20 ' : ''}
     >
       <div style={{ paddingTop: "100px" }}>
         {/* Rewrite Modal  */}
@@ -58,7 +57,7 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
                       </p>
                       </div>
                   ))}
-                  <div 
+                  <div
                   onClick={() => {
                     setIsBoardModalOpen(true)
                   }}
@@ -70,8 +69,8 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
                       </p>
                    </div>
                    {/* About us Button  */}
-                   
-                   <div 
+
+                   <div
                      onClick={() => {
                      window.location.href = '/aboutUs'; // استفاده از window.location.href برای هدایت به صفحه ورود
                      }}
@@ -80,12 +79,12 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
                      <img src={aboutUsIcon} alt='signout' className='h-4'/>
                      <p className=' text-lg font-bold'>
                      About Us
-                      </p> 
+                      </p>
                     </div>
 
                   {/* Setting Button  */}
 
-                  <div 
+                  <div
                      onClick={() => {
                      window.location.href = '/ProfilePage'; // استفاده از window.location.href برای هدایت به صفحه ورود
                      }}
@@ -94,11 +93,11 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
                      <img src={aboutUsIcon} alt='signout' className='h-4'/>
                      <p className=' text-lg font-bold'>
                      Setting
-                      </p> 
+                      </p>
                     </div>
 
                    {/* Sign Out Button */}
-                   <div 
+                   <div
                      onClick={() => {
                      window.location.href = '/'; // استفاده از window.location.href برای هدایت به صفحه ورود
                      }}
@@ -107,10 +106,10 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
                      <img src={SignoutIcon} alt='signout' className='h-4'/>
                      <p className=' text-lg font-bold'>
                       Sign Out
-                      </p> 
+                      </p>
                     </div>
                   </div>
-                   
+
                   <div className=' mx-2 px-1 relative space-x-2 bg-[#416555] dark:bg-[#2b2c37] flex justify-center items-center rounded-lg'>
                    <img src={lightIcon} alt="sun indicating light mode" />
 
@@ -137,21 +136,21 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
 
         {/* Sidebar hide/show toggle */}
         {isSideBarOpen ? (
-          <div 
+          <div
           onClick={() => setIsSideBarOpen(state => !state)}
           className=' flex items-center mt-2 absolute bottom-16 text-lg font-bold rounded-r-full hover:text-[#ebf4f0] cursor-pointer mr-6
           mb-8 px-8 py-4 hover:bg-white space-x-2 justify-center my-4 text-gray-500'>
             <img src={hideSidebarIcon} alt='hideSidebarIcon' className=' min-w-[20px]'/>
             {isBoardModalOpen && <p> Hide Sidebar</p>}
           </div>
-        ) : 
-        <div 
+        ) :
+        <div
         onClick={() => setIsSideBarOpen(state => !state)}
-        className=' flex items-center mt-2 absolute bottom-16 text-lg font-bold rounded-r-full hover:text-[#ebf4f0] cursor-pointer mr-6
-        mb-8 px-8 py-4 hover:bg-white space-x-2 justify-center my-4 text-gray-500'>
-          <img src={showSidebarIcon} alt='showSidebarIcon' className=' min-w-[20px]'/> 
+        className='flex items-center mt-2 absolute bottom-0 text-lg font-bold rounded-r-full hover:text-[#ebf4f0] cursor-pointer mr-6
+        mb-8 px-8 py-4 space-x-2 justify-center my-4 text-gray-500 bg-[#635] dark:bg-[#635fc71a] dark:hover:bg-[#416555]'>
+          <img src={showSidebarIcon} alt='showSidebarIcon' className=' min-w-[20px]'/>
 
-        </div> 
+        </div>
 }
       </div>
     </div>
@@ -160,7 +159,7 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
       <AddEditBoardModal
       type='add'
       setBoardModalOpen={setIsBoardModalOpen}
-      
+
       />
     }
     </div>
