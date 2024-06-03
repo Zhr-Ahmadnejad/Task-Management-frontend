@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import crossIcon from "../Assets/crossIcone.png";
 import { useDispatch, useSelector } from 'react-redux';
 import boardSlices from '../Redux/boardsSlice';
+import XIcon from "../Components/icons/x-icon.jsx";
 
 const API_URL = 'http://localhost:8088/api/user/boards';
 
@@ -94,13 +95,17 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
         }
         setBoardModalOpen(false);
       }}
-      className='fixed right-0 left-0 top-0 bottom-0 px-2 scrollbar-hide py-4 overflow-scroll 
+      className='fixed right-0 left-0 top-0 bottom-0 px-2 scrollbar-hide py-4 overflow-scroll
     z-50 justify-center items-center flex bg-[#00000080]'
     >
 
       <div className='scrollbar-hide overflow-y-scroll max-h[95vh] bg-white dark:bg-[#2b2c37] text-black
    dark:text-white font-bold shadow-md shadow-[#364e7e1a] max-w-md mx-auto w-full px-8 py-8 rounded-xl'
       >
+        <button onClick={()=> setBoardModalOpen(false)}>
+          <XIcon classes={"w-10"}/>
+        </button>
+
         <h3 className='text-lg'>
           {type === 'edit' ? 'Edit' : 'Add New'} Board
         </h3>
@@ -110,36 +115,40 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
             Board Name
           </label>
           <input
-            className='bg-transparent px-4 py-2 rounded-md text-sm border border-gray-600 outline-none
+              className='bg-transparent px-4 py-2 rounded-md text-sm border border-gray-600 outline-none
        focus:outline-[#416555] outline-1 right-0
        '
-            placeholder='e.g Web Design'
-            value={name}
-            onChange={(e) => { setName(e.target.value); }}
-            id='board-name-input'
+              placeholder='e.g Web Design'
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              id='board-name-input'
           />
         </div>
 
         <div className=' mt-8 flex flex-col space-y-3'>
           <label
-            className='text-sm dark:text-white text-gray-500'
+              className='text-sm dark:text-white text-gray-500'
           > Board Columns
           </label>
           {
             newColumns.map((column, index) => (
-              <div key={index} className='flex items-center w-full'>
-                <input className='bg-transparent flex-grow px-4 py-2 rounded-mdtext-sm
+                <div key={index} className='flex items-center w-full'>
+                  <input className='bg-transparent flex-grow px-4 py-2 rounded-mdtext-sm
             border border-gray-600 outline-none focus: outline-[#416555]'
-                  onChange={(e) => {
-                    onChange(column.id, e.target.value);
-                  }}
-                  value={column.name}
-                  type='text' />
-                <img src={crossIcon}
-                  className='w-5 h-5 cursor-pointer m-4'
-                  onClick={() => { onDelete(column.id) }}
-                />
-              </div>
+                         onChange={(e) => {
+                           onChange(column.id, e.target.value);
+                         }}
+                         value={column.name}
+                         type='text'/>
+                  <img src={crossIcon}
+                       className='w-5 h-5 cursor-pointer m-4'
+                       onClick={() => {
+                         onDelete(column.id)
+                       }}
+                  />
+                </div>
             ))
           }
         </div>
@@ -147,22 +156,22 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
         <div>
           <button className='w-full items-center hover:opacity-75 dark:text-[#416555] dark:bg-white text-white
    bg-[#416555] py-2 mt-2 rounded-full'
-            onClick={() => {
-              setNewColumns((state) => [
-                ...state,
-                { name: '', task: [], id: uuidv4() }
-              ]);
-            }}
+                  onClick={() => {
+                    setNewColumns((state) => [
+                      ...state,
+                      {name: '', task: [], id: uuidv4()}
+                    ]);
+                  }}
           >
             + Add new column
           </button>
 
           <button className='w-full items-center hover:opacity-75 dark:text-white dark:bg-[#416555] text-white
    bg-[#416555] py-2 mt-8 rounded-full'
-            onClick={() => {
-              const isValid = validate();
-              if (isValid) onSubmit();
-            }}
+                  onClick={() => {
+                    const isValid = validate();
+                    if (isValid) onSubmit();
+                  }}
           >
             {type === 'add' ? 'Create New Board' : 'Save Changes'}
           </button>

@@ -50,8 +50,8 @@ function App() {
                     <EmptyBoard type='add'/>
                 )
             } />
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage/>} />
+            <Route path="/" element={tokenData ? <Navigate to="/home" /> : <LoginPage />} />
+            <Route path="/signup" element={tokenData ? <Navigate to="/home" /> : <SignupPage/>} />
             <Route path="/aboutUs" element={tokenData ? <AboutUs/> : <Navigate to="/" />} />
             <Route path="/ProfilePage" element={tokenData ? <ProfilePage/> : <Navigate to="/" />}/>
           </Routes>

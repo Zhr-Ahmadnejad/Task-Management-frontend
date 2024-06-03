@@ -11,6 +11,8 @@ import showSidebarIcon from '../Assets/icon-show-sidebar.svg';
 import AddEditBoardModal from '../Modals/AddEditBoardModal';
 import SignoutIcon from '../Assets/sign_out_icon.jpg';
 import aboutUsIcon from '../Assets/about-us-icon_final.jpg';
+import Cookies from "js-cookie";
+import {useNavigate} from "react-router-dom";
 
 function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
   const [colorTheme , setTheme] = useDarkMode()
@@ -24,6 +26,13 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
 
   const boards = useSelector((state) => state.boards)
   const[isBoardModalOpen, setIsBoardModalOpen] = useState(false)
+
+  const navigate = useNavigate();
+
+  const signoutHandler = ()=>{
+    Cookies.remove('token')
+    navigate(0)
+  }
 
   return (
     <div>
@@ -98,9 +107,7 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
 
                    {/* Sign Out Button */}
                    <div
-                     onClick={() => {
-                     window.location.href = '/'; // استفاده از window.location.href برای هدایت به صفحه ورود
-                     }}
+                     onClick={signoutHandler}
                     className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
                      text-red-700 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
                      <img src={SignoutIcon} alt='signout' className='h-4'/>
@@ -147,11 +154,11 @@ function Sidebar({ isSideBarOpen , setIsSideBarOpen}) {
         <div
         onClick={() => setIsSideBarOpen(state => !state)}
         className='flex items-center mt-2 absolute bottom-0 text-lg font-bold rounded-r-full hover:text-[#ebf4f0] cursor-pointer mr-6
-        mb-8 px-8 py-4 space-x-2 justify-center my-4 text-gray-500 bg-[#635] dark:bg-[#635fc71a] dark:hover:bg-[#416555]'>
+        mb-8 px-8 py-4 space-x-2 justify-center my-4 text-gray-500 bg-[#416555] dark:bg-[#635fc71a] dark:hover:bg-[#416555]'>
           <img src={showSidebarIcon} alt='showSidebarIcon' className=' min-w-[20px]'/>
 
         </div>
-}
+       }
       </div>
     </div>
     {
