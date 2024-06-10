@@ -13,20 +13,22 @@ import boardsSlice from '../Redux/boardsSlice'
 import DeleteModal from '../Modals/DeleteModal'
 import Cookies from "js-cookie";
 import {useNavigate} from "react-router-dom"
+import axios from "axios";
 
 ///creat Header component
 function Header({setBoardModalOpen, boardModalOpen}) {
-
-    const dispatch = useDispatch()
-
-
-    /// use hook useState for manage dropdown
+/// use hook useState for manage dropdown
     const [openDropdown, setOpenDropdown] = useState(false)
     const [boardType, setBoardType] = useState('add')
     const [openAddEditTassk, setOpenAddEditTassk] = useState(false)
     const [isElipsisMenuOpen, setIsElipsisMenuOpen] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
+
+
+
+
+    const dispatch = useDispatch()
 
     const boards = useSelector((state) => state.boards)
     const board = boards.find(board => board.isActive)
@@ -68,6 +70,9 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     }, [])
 
 
+
+
+
     return (
         <div className=' p-4 fixed left-0 bg-[#416555] dark:bg-[#2b2c37] z-50 right-0'>
             <header className=' flex justify-between dark:text-white items-center'>
@@ -88,12 +93,10 @@ function Header({setBoardModalOpen, boardModalOpen}) {
 
                 {/* Right Side */}
                 <div className=' flex items-center space-x-4 md:space-x-6 '>
-                    <button onClick={
-                        () => {
-                            setIsTaskModalOpen((prevState) => !prevState)
-                        }
-                    }
-                            className='hidden md:block button'>
+                    <button
+                        onClick={() =>  setIsTaskModalOpen((prevState) => !prevState)}
+                        className='hidden md:block button'
+                    >
                         + Add New Task
                     </button>
 

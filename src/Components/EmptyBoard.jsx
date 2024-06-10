@@ -1,9 +1,42 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import AddEditBoardModal from "../Modals/AddEditBoardModal";
+import Cookies from "js-cookie";
+import axios from "axios";
 
-function EmptyBoard({ type }) {
+
+function EmptyBoard({ type ,check, setCheck}) {
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
-  return (
+
+  const tokenData = Cookies.get('token')
+
+    useEffect(() => {
+
+
+       if(tokenData && check){
+
+           (async () => {
+               try {
+                   const {data} = await axios.get("http://localhost:8088/api/user/boards", {
+                       headers: {
+                           Authorization: `Bearer ${tokenData}`
+                       }
+                   })
+
+                   if (data) {
+                       setCheck(check + 1)
+                   }
+               } catch (err) {
+                   console.log(err)
+               }
+           })()
+       }
+
+    }, []);
+
+
+
+
+    return (
     <div className=" bg-white dark:bg-[#2b2c37] h-screen w-screen flex flex-col  items-center justify-center">
       <h3 className=" text-gray-500 font-bold">
         {type === "edit"

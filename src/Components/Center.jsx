@@ -4,8 +4,11 @@ import AddEditBoardModal from "../Modals/AddEditBoardModal";
 import Column from "./Column";
 import EmptyBoard from "./EmptyBoard";
 import Sidebar from "./Sidebar";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
 
-function Center({ boardModalOpen , setBoardModalOpen}) {
+function Center() {
 
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
@@ -31,7 +34,50 @@ function Center({ boardModalOpen , setBoardModalOpen}) {
   const columns = board.columns;
 
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+  const [task_state, setTask_state] = useState([])
 
+  let [searchParams] = useSearchParams();
+  let queryParam = searchParams.get("");
+
+  const navigate = useNavigate()
+
+
+  useEffect(() => {
+    (async ()=>{
+      const user_token = Cookies.get('token');
+
+      if (queryParam){
+        try {
+          const {data} = await axios.get("http://localhost:8088/api/user/boards",{
+            headers : {
+              Authorization : `Bearer ${user_token}`
+            }
+          })
+
+          if (data){
+            const find_board_data = data.find((itm)=> itm.id.toString() === queryParam)
+            setTask_state(find_board_data.taskStates)
+          }
+        }catch (err){
+          console.log(err)
+        }
+      }else {
+        try {
+          const {data} = await axios.get("http://localhost:8088/api/user/boards", {
+            headers: {
+              Authorization: `Bearer ${user_token}`
+            }
+          })
+
+          if (data) {
+            navigate(`/home?=${data[0]?.id}`)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    })()
+  }, [queryParam]);
 
   return (
     <div style={{ paddingTop: "100px" }}
@@ -50,14 +96,15 @@ function Center({ boardModalOpen , setBoardModalOpen}) {
 
       {/* Columns Section */}
 
-      {columns.length > 0 ? (
+      {task_state.length > 0 ? (
         <>
-          {columns.map((col, index) => (
-            <Column key={index} colIndex={index} />
+          {task_state.map((col) => (
+            <Column key={col.id} dataCol={col} />
           ))}
           <div
             onClick={() => {
-              setIsBoardModalOpen(true);
+              console.log("hello")
+              // setIsBoardModalOpen(true);
             }}
             className=" h-screen dark:bg-[#2b2c3740] flex justify-center items-center font-bold text-2xl hover:text-[#416555] transition duration-300 cursor-pointer bg-[#E9EFFA] scrollbar-hide mb-2   mx-5 pt-[90px] min-w-[280px] text-[#828FA3] mt-[135px] rounded-lg "
           >

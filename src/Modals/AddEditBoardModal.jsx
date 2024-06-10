@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import crossIcon from "../Assets/crossIcone.png";
 import { useDispatch, useSelector } from 'react-redux';
 import boardSlices from '../Redux/boardsSlice';
 import XIcon from "../Components/icons/x-icon.jsx";
+import Cookies from "js-cookie";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {toast} from "react-toastify";
 
-const API_URL = 'http://localhost:8088/api/user/boards';
 
 function AddEditBoardModal({ setBoardModalOpen, type }) {
   const [name, setName] = useState('');
-  const [isValid, setIsValid] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const dispatch = useDispatch();
+    const [first_add, setFirst_add] = useState(false)
+
   const board = useSelector((state) => state.boards).find((board) => board.isActive);
 
   const [newColumns, setNewColumns] = useState([
     { name: 'Todo', task: [], id: uuidv4() },
     { name: 'Doing', task: [], id: uuidv4() },
   ]);
+
+    let [searchParams] = useSearchParams();
+    let queryParam = searchParams.get("");
+
+    useEffect(() => {
+        if (!queryParam) setFirst_add(true)
+    }, []);
+
+
 
   if (type === 'edit' && isFirstLoad) {
     setNewColumns(
@@ -44,47 +55,75 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
   };
 
   const validate = () => {
-    setIsValid(false);
+
     if (!name.trim()) {
+        const notify = () => toast.error("empty field name");
+        notify()
+
       return false;
     }
 
+
     for (let i = 0; i < newColumns.length; i++) {
       if (!newColumns[i].name.trim()) {
+          const notify = () => toast.error("empty field board column");
+          notify()
         return false;
       }
     }
 
-    setIsValid(true);
     return true;
   };
 
+  const navigate = useNavigate();
+
   const onSubmit = async () => {
-    setBoardModalOpen(false);
-    const token = localStorage.getItem("token");
-    const isValid = validate();
-    if (isValid) {
-      try {
-        console.log('Name before sending:', name);
-        const response = await axios.post(
-          API_URL,
-          {
-            name,
-            columns: newColumns
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }
+      const isValid = validate();
+      if (isValid){
+        const user_token = Cookies.get('token');
+        const board_columns = newColumns.map(item => item.name);
+
+
+          try {
+
+
+              const {data} = await axios.post("http://localhost:8088/api/user/boards",{
+                  boardName: name,
+                  taskStates : board_columns
+              },{
+                  headers : {
+                      Authorization : `Bearer ${user_token}`
+                  }
+              })
+
+              if (first_add){
+                  const notify = () => toast.success("board saved.");
+                  notify()
+
+                  console.log(data)
+                  navigate(0)
+              }else {
+                  const notify = () => toast.success("board saved.");
+                  notify()
+
+                  setBoardModalOpen(false);
+
+                  console.log(data)
+              }
+
+          }catch (err){
+              console.log(err)
+              if(err.response.data === 'The token signature is invalid. '){
+                  Cookies.remove('token')
+                  navigate(0)
+              }else if (err.response.data === 'A board with the same name already exists for this user'){
+                  const notify = () => toast.error("board exist");
+                  notify()
+              }
+
           }
-        );
-        console.log('Board created:', response.data);
-        dispatch(boardSlices.actions.addBoard(response.data));
-      } catch (error) {
-        console.error('Error creating board:', error);
-        // اینجا می‌توانید برای کاربر پیغام خطا یا اعمال اقدامات مورد نیاز را قرار دهید
       }
-    }
+
   };
 
   return (
@@ -154,8 +193,7 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
         </div>
 
         <div>
-          <button className='w-full items-center hover:opacity-75 dark:text-[#416555] dark:bg-white text-white
-   bg-[#416555] py-2 mt-2 rounded-full'
+          <button className='w-full items-center hover:opacity-75 dark:text-[#416555] dark:bg-white text-white bg-[#416555] py-2 mt-2 rounded-full'
                   onClick={() => {
                     setNewColumns((state) => [
                       ...state,
@@ -166,12 +204,9 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
             + Add new column
           </button>
 
-          <button className='w-full items-center hover:opacity-75 dark:text-white dark:bg-[#416555] text-white
-   bg-[#416555] py-2 mt-8 rounded-full'
-                  onClick={() => {
-                    const isValid = validate();
-                    if (isValid) onSubmit();
-                  }}
+          <button
+              className='w-full items-center hover:opacity-75 dark:text-white dark:bg-[#416555] text-white bg-[#416555] py-2 mt-8 rounded-full'
+              onClick={onSubmit}
           >
             {type === 'add' ? 'Create New Board' : 'Save Changes'}
           </button>
