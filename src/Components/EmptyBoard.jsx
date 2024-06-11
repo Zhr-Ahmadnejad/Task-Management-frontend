@@ -2,12 +2,15 @@ import React, {useEffect, useState} from "react";
 import AddEditBoardModal from "../Modals/AddEditBoardModal";
 import Cookies from "js-cookie";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 function EmptyBoard({ type ,check, setCheck}) {
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
 
   const tokenData = Cookies.get('token')
+
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -26,9 +29,17 @@ function EmptyBoard({ type ,check, setCheck}) {
                        setCheck(check + 1)
                    }
                } catch (err) {
-                   console.log(err)
+                   if(err.response.data === 'The token signature is invalid. '){
+                       Cookies.remove('token')
+                       navigate("/signup")
+                       navigate(0)
+                   }
                }
            })()
+       }else if (!tokenData){
+           Cookies.remove('token')
+           navigate("/signup")
+           navigate(0)
        }
 
     }, []);

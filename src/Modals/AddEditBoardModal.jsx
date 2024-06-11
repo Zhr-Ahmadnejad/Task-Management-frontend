@@ -10,7 +10,7 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "react-toastify";
 
 
-function AddEditBoardModal({ setBoardModalOpen, type }) {
+function AddEditBoardModal({ setBoardModalOpen, type ,setCheck}) {
   const [name, setName] = useState('');
   const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [first_add, setFirst_add] = useState(false)
@@ -103,12 +103,12 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
                   console.log(data)
                   navigate(0)
               }else {
+
                   const notify = () => toast.success("board saved.");
                   notify()
 
                   setBoardModalOpen(false);
-
-                  console.log(data)
+                  setCheck((prevstate)=> prevstate + 1)
               }
 
           }catch (err){

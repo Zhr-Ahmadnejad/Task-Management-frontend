@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Cookies from "js-cookie";
 
 
 function ProfilePage() {
@@ -12,25 +13,32 @@ function ProfilePage() {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log('Token:', token);
-    if (token) {
-      axios.get('http://localhost:8088/api/users/user', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(response => {
-        setUser(response.data);
-        setFirstName(response.data.firstName);
-        setLastName(response.data.lastName);
-        setEmail(response.data.email);
-        setPassword(response.data.password);
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-      });
+    const user_token = Cookies.get('token');
+
+    if (user_token) {
+
+      try {
+        (async ()=>{
+          const {data} = await axios.get('http://localhost:8088/api/users/user',{
+            headers: {
+              Authorization: `Bearer ${user_token}`
+            }
+          })
+
+          console.log(data);
+
+          // setUser(response.data);
+          // setFirstName(response.data.firstName);
+          // setLastName(response.data.lastName);
+          // setEmail(response.data.email);
+          // setPassword(response.data.password);
+
+
+        })()
+      }catch (err){
+        console.log(err)
+      }
+
     }
   }, []);
 
@@ -58,6 +66,9 @@ function ProfilePage() {
       console.error('Error updating user:', error);
     });
   };
+
+
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#416555] dark:bg-white">
       <div className="bg-white dark:bg-[#416555] p-8 rounded-lg shadow-lg text-[#416555] dark:text-white">

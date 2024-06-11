@@ -48,15 +48,14 @@ function Center() {
 
       if (queryParam){
         try {
-          const {data} = await axios.get("http://localhost:8088/api/user/boards",{
+          const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
             headers : {
               Authorization : `Bearer ${user_token}`
             }
           })
 
           if (data){
-            const find_board_data = data.find((itm)=> itm.id.toString() === queryParam)
-            setTask_state(find_board_data.taskStates)
+            setTask_state(data.taskStates)
           }
         }catch (err){
           console.log(err)

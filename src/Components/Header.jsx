@@ -12,7 +12,7 @@ import ElipsisMenu from './ElipsisMenu'
 import boardsSlice from '../Redux/boardsSlice'
 import DeleteModal from '../Modals/DeleteModal'
 import Cookies from "js-cookie";
-import {useNavigate} from "react-router-dom"
+import {useNavigate, useSearchParams} from "react-router-dom"
 import axios from "axios";
 
 ///creat Header component
@@ -20,18 +20,39 @@ function Header({setBoardModalOpen, boardModalOpen}) {
 /// use hook useState for manage dropdown
     const [openDropdown, setOpenDropdown] = useState(false)
     const [boardType, setBoardType] = useState('add')
-    const [openAddEditTassk, setOpenAddEditTassk] = useState(false)
     const [isElipsisMenuOpen, setIsElipsisMenuOpen] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
-
-
-
-
-    const dispatch = useDispatch()
+    const [nameBoard, setNameBoard] = useState("");
 
     const boards = useSelector((state) => state.boards)
     const board = boards.find(board => board.isActive)
+
+    let [searchParams] = useSearchParams();
+    let queryParam = searchParams.get("");
+
+    const user_token = Cookies.get('token');
+
+    useEffect(() => {
+
+
+        (async ()=>{
+            try {
+                const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
+                    headers : {
+                        Authorization : `Bearer ${user_token}`
+                    }
+                })
+
+                if (data){
+                    setNameBoard(data.boardName)
+                }
+            }catch (err){
+                console.log(err)
+            }
+        })()
+
+    }, []);
 
     const setOpenEditModal = () => {
         setBoardModalOpen(true)
@@ -43,15 +64,27 @@ function Header({setBoardModalOpen, boardModalOpen}) {
         setIsElipsisMenuOpen(false)
     }
 
-    const onDeleteBtnClick = (e) => {
-        if (e.target.textContent === "Delete") {
-            dispatch(boardsSlice.actions.deleteBoard())
-            dispatch(boardsSlice.actions.setBoardActive({index: 0}))
-            setIsDeleteModalOpen(false)
-        } else {
-            setIsDeleteModalOpen(false)
+    const onDeleteBtnClick = async () => {
+
+        try {
+            const {data} = await axios.delete(`http://localhost:8088/api/user/boards/${+queryParam}`,{
+                headers : {
+                    Authorization : `Bearer ${user_token}`
+                }
+            })
+
+
+            if (data){
+                setIsDeleteModalOpen(false)
+                navigate("/")
+                navigate(0)
+            }
+        }catch (err){
+            console.log(err)
         }
     }
+
+    const cancelBtn = ()=> setIsDeleteModalOpen(false)
 
     const onDropdownClick = () => {
         setOpenDropdown(state => !state)
@@ -70,6 +103,13 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     }, [])
 
 
+    const open_drop_handle = ()=>{
+        setBoardType("edit");
+        setOpenDropdown(false)
+        setIsElipsisMenuOpen((prevState) => !prevState);
+    }
+
+    const close_dropDown = ()=> setIsElipsisMenuOpen(false)
 
 
 
@@ -111,28 +151,27 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                         +
                     </button>
                     <img
-                        onClick={() => {
-                            setBoardType("edit");
-                            setOpenDropdown(false)
-                            setIsElipsisMenuOpen((prevState) => !prevState);
-                        }}
+                        onClick={open_drop_handle}
                         src={elipsis}
                         alt="elipsis"
                         className=" cursor-pointer h-6"
                     />
 
                     {
-                        isElipsisMenuOpen && <ElipsisMenu
+                        isElipsisMenuOpen &&
+                        <ElipsisMenu
                             setOpenDeleteModal={setOpenDeleteModal}
                             setOpenEditModal={setOpenEditModal}
-                            type='Boards'/>
+                            type='Boards'
+                            closeModal={close_dropDown}
+                        />
                     }
 
 
                 </div>
                 {
                     openDropdown &&
-                    <HeaderDropdown setBoardModalOpen={setBoardModalOpen} setOpenDropdown={setOpenDropdown}/>
+                    <HeaderDropdown setBoardModalOpen={setBoardModalOpen} setOpenDropdown={setOpenDropdown} />
                 }
             </header>
 
@@ -149,8 +188,11 @@ function Header({setBoardModalOpen, boardModalOpen}) {
             {
                 isDeleteModalOpen && (
                     <DeleteModal
-                        setIsDeleteModalOpen={setIsDeleteModalOpen} type="board" title={board.name}
-                        onDeleteBtnClick={onDeleteBtnClick}/>
+                        type="board"
+                        title={nameBoard}
+                        onDeleteBtnClick={onDeleteBtnClick}
+                        toggleDeleteModal={cancelBtn}
+                    />
                 )
             }
         </div>

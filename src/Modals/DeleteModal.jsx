@@ -1,6 +1,8 @@
 import React from "react";
 
-function DeleteModal({ type, title, onDeleteBtnClick, isDeleteModalOpen, toggleDeleteModal }) {
+function DeleteModal({ type, title, onDeleteBtnClick, toggleDeleteModal }) {
+
+
   return (
     // Modal Container
     <div

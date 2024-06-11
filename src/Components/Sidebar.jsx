@@ -19,6 +19,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
 
     const [boards_length, setBoards_length] = useState(0);
     const [all_boards, setAll_boards] = useState([]);
+    const [check, setCheck] = useState(1);
 
     useEffect(() => {
         (async ()=>{
@@ -41,7 +42,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                 }
             }
         })()
-    }, []);
+    }, [check]);
 
 
     const toggleDarkMode = (checked) => { ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
@@ -202,7 +203,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                 <AddEditBoardModal
                     type='add'
                     setBoardModalOpen={setIsBoardModalOpen}
-
+                    setCheck={setCheck}
                 />
             }
         </div>
