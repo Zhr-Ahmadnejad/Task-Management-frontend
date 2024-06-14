@@ -8,14 +8,17 @@ import useDarkMode from '../Hooks/useDarkMode'
 import boardsSlice from '../Redux/boardsSlice'
 import SignoutIcon from '../Assets/sign_out_icon.jpg'
 import aboutUsIcon from '../Assets/about-us-icon_final.jpg';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 
 
 function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
-    const [colorTheme, setTheme] = useDarkMode() ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
-    const [darkSide, setdarkSide] = useState(colorTheme === 'light') ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
+    const [colorTheme, setTheme] = useDarkMode()
+    const [darkSide, setdarkSide] = useState(colorTheme === 'light')
+    const [all_boards, setAll_boards] = useState([]);
+    const [check, setCheck] = useState(1);
+    const [boards_length, setBoards_length] = useState(0);
     const dispatch = useDispatch()
 
     const toggleDarkMode = (checked) => { ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
@@ -27,18 +30,27 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
 
 
     useEffect(() => {
-        // (async ()=>{
-        //     const user_token = Cookies.get('token');
-        //
-        //     const response = await axios.get("http://localhost:8088/api/user/boards",{
-        //         headers : {
-        //             Authorization : `Bearer ${user_token}`
-        //         }
-        //     })
-        //
-        //     console.log(response)
-        // })()
-    }, []);
+        (async ()=>{
+            const user_token = Cookies.get('token');
+
+            try {
+                const {data} = await axios.get("http://localhost:8088/api/user/boards",{
+                    headers : {
+                        Authorization : `Bearer ${user_token}`
+                    }
+                })
+
+                if (data){
+                    setBoards_length(data.length)
+                    setAll_boards(data)
+                }
+            }catch (err){
+                if(err.response.data === 'The token signature is invalid. '){
+                    signoutHandler()
+                }
+            }
+        })()
+    }, [check]);
 
     const navigate = useNavigate();
 
@@ -46,6 +58,14 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
         Cookies.remove('token')
         navigate(0)
     }
+
+    const board_handle = (id)=>{
+        navigate(`/home?=${id}`)
+    }
+
+    let [searchParams] = useSearchParams();
+    let queryParam = searchParams.get("");
+
 
     return (
         <div
@@ -69,17 +89,16 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                 </h3>
 
                 <div>
-                    {boards.map((board, index) => (
+                    {all_boards.map((itm) => (
                         <div
-                            className={`cursor-pointer dark:text-white flex items-baseline space-x-2 px-5 py-4 ${board.isActive && 'bg-[#416555] rounded-r-full text-white mr-8'}`}
-                            key={index}
-                            onClick={() => {
-                                dispatch(boardsSlice.actions.setBoardActive({index}))
-                            }}
+                            className={`cursor-pointer dark:text-white flex items-baseline space-x-2 px-5 py-4 
+                                ${queryParam === itm.id.toString() && 'bg-[#416555] rounded-r-full text-white mr-8'}`}
+                            key={itm.id}
+                            onClick={()=> board_handle(itm.id)}
                         >
 
                             <img src={boardIcon} className='h-4'/>
-                            <p className=' text-lg font-bold'>{board.name}</p>
+                            <p className=' text-lg font-bold'> {itm.boardName}</p>
                         </div>
                     ))}
 

@@ -6,10 +6,8 @@ import iconup from '../Assets/icon-chevron-up.svg'
 import elipsis from '../Assets/elipsis3.png'
 import HeaderDropdown from './HeaderDropdown'
 import AddEditBoardModal from '../Modals/AddEditBoardModal'
-import {useDispatch, useSelector} from 'react-redux'
 import AddEditTaskModal from '../Modals/AddEditTaskModal'
 import ElipsisMenu from './ElipsisMenu'
-import boardsSlice from '../Redux/boardsSlice'
 import DeleteModal from '../Modals/DeleteModal'
 import Cookies from "js-cookie";
 import {useNavigate, useSearchParams} from "react-router-dom"
@@ -25,8 +23,6 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
     const [nameBoard, setNameBoard] = useState("");
 
-    const boards = useSelector((state) => state.boards)
-    const board = boards.find(board => board.isActive)
 
     let [searchParams] = useSearchParams();
     let queryParam = searchParams.get("");
@@ -45,6 +41,7 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                 })
 
                 if (data){
+
                     setNameBoard(data.boardName)
                 }
             }catch (err){
@@ -52,7 +49,7 @@ function Header({setBoardModalOpen, boardModalOpen}) {
             }
         })()
 
-    }, []);
+    }, [queryParam]);
 
     const setOpenEditModal = () => {
         setBoardModalOpen(true)
@@ -88,7 +85,6 @@ function Header({setBoardModalOpen, boardModalOpen}) {
 
     const onDropdownClick = () => {
         setOpenDropdown(state => !state)
-        setIsElipsisOpen(false)
         setBoardType('add')
     }
 
@@ -123,7 +119,7 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                     <img src={logo} alt='logo' width="300" height="200" className=' hidden md:inline-block'/>
                     <div className='flex items-center'>
                         <h3 className=' truncate max-w-[200px] md:text-2xl text-xl font-bold md:ml-20 font-sans text-white'>
-                            {board.name}
+                            {nameBoard}
                         </h3>
                         <img src={openDropdown ? iconup : icondown} alt='dropdown icon'
                              className=' h-9 w-9 ml-3 cursor-pointer md:hidden'
