@@ -23,6 +23,7 @@ function Column({colIndex,dataCol}) {
   const [color, setColor] = useState(null);
   const [column_length, setColumn_length] = useState(0);
   const [column_data, setColumn_data] = useState([]);
+  const [check, setCheck] = useState(1);
 
   useEffect(() => {
     setColor(shuffle(colors).pop());
@@ -55,7 +56,7 @@ function Column({colIndex,dataCol}) {
         console.log(err)
       }
     })()
-  }, [queryParam]);
+  }, [queryParam,check]);
 
 
   const handleOnDrop = async (e) => {
@@ -104,7 +105,7 @@ function Column({colIndex,dataCol}) {
 
 
       {column_data.map((task, index) => (
-        <Task key={index} col_data={task} taskIndex={index} colIndex={colIndex} />
+        <Task key={index} col_data={task} taskIndex={index} colIndex={colIndex} setCheck={setCheck}/>
       ))}
 
     </div>

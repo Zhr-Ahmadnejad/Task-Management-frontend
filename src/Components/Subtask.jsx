@@ -1,32 +1,20 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import boardsSlice from "../Redux/boardsSlice";
 
-function Subtask({ index, taskIndex, colIndex }) {
-  const dispatch = useDispatch();
-  const boards = useSelector((state) => state.boards);
-  const board = boards.find((board) => board.isActive === true);
-  const col = board.columns.find((col, i) => i === colIndex);
-  const task = col.tasks.find((task, i) => i === taskIndex);
-  const subtask = task.subtasks.find((subtask, i) => i === index);
-  const checked = subtask.isCompleted;
+function Subtask({ data_sub,change }) {
 
-  const onChange = (e) => {
-    dispatch(
-      boardsSlice.actions.setSubtaskCompleted({ index, taskIndex, colIndex })
-    );
-  };
+
+
 
   return (
     <div className=" w-full flex hover:bg-[#5fc76240] dark:hover:bg-[#5fc76240] rounded-md relative items-center justify-start text-black dark:text-white dark:bg-[#20212c]  p-3 gap-4  bg-[#f4f7fd]">
       <input
         className=" w-4 h-4  accent-[#416555] cursor-pointer "
         type="checkbox"
-        checked={checked}
-        onChange={onChange}
+        checked={!data_sub.active}
+        onChange={(e)=> change(e,data_sub.id)}
       />
-      <p className={checked && " line-through opacity-30 "}>
-      {subtask.title}
+      <p className={data_sub.active ? "" : "line-through opacity-30"}>
+      {data_sub.title}
       </p>
     </div>
   );

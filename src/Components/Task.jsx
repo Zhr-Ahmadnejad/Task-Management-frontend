@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TaskModal from "../Modals/TaskModal";
 
-function Task({ colIndex, taskIndex,col_data }) {
+function Task({ colIndex, taskIndex,col_data ,setCheck}) {
 
   const handleOnDrag = (e) => {
     e.dataTransfer.setData(
@@ -36,6 +36,8 @@ function Task({ colIndex, taskIndex,col_data }) {
           colIndex={colIndex}
           taskIndex={taskIndex}
           setIsTaskModalOpen={setIsTaskModalOpen}
+          task_data={col_data}
+          setCheck={setCheck}
         />
       )}
     </div>
