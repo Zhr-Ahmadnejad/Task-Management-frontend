@@ -2,37 +2,40 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from "js-cookie";
+import {useNavigate} from "react-router-dom";
 
 
 function ProfilePage() {
-  const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userId, setUserId] = useState("");
+
+  const user_token = Cookies.get('token');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const user_token = Cookies.get('token');
+
 
     if (user_token) {
 
       try {
         (async ()=>{
-          const {data} = await axios.get('http://localhost:8088/api/users/user',{
+          const {data} = await axios.get('http://localhost:8088/api/user/33',{
             headers: {
               Authorization: `Bearer ${user_token}`
             }
           })
 
-          console.log(data);
+          setUserId(data.id)
 
-          // setUser(response.data);
-          // setFirstName(response.data.firstName);
-          // setLastName(response.data.lastName);
-          // setEmail(response.data.email);
-          // setPassword(response.data.password);
-
+          setFirstName(data.firstName);
+          setLastName(data.lastName);
+          setEmail(data.email);
+          setPassword(data.password);
 
         })()
       }catch (err){
@@ -46,27 +49,46 @@ function ProfilePage() {
     setEditMode(true);
   };
 
-  const handleSave = () => {
-    const token = localStorage.getItem('token');
-    axios.put('http://localhost:8088/api/users', {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(response => {
-      console.log('User updated successfully:', response.data);
-      setEditMode(false);
-    })
-    .catch(error => {
-      console.error('Error updating user:', error);
-    });
+  const handleSave = async () => {
+
+    try {
+      const {data}= await  axios.put('http://localhost:8088/api/user', {
+        firstName: firstName.length > 0 ? firstName : null,
+        lastName: lastName.length > 0 ? lastName : null,
+        email: email.length > 0 ? email : null,
+        password: password.length > 0 ? password : null
+      }, {
+        headers: {
+          Authorization: `Bearer ${user_token}`
+        }
+      })
+
+      console.log(data)
+    }catch (err){
+      console.log(err)
+    }
+
   };
 
+  const delete_user = async ()=>{
+
+
+    try {
+      const {data} = await axios.delete(`http://localhost:8088/api/user/${userId}`,{
+        headers : {
+          Authorization: `Bearer ${user_token}`
+        }
+      })
+
+      if(data){
+        Cookies.remove('token')
+        navigate("/signup")
+        navigate(0)
+      }
+    }catch (err){
+      console.log(err)
+    }
+  }
 
 
   return (
@@ -151,6 +173,18 @@ function ProfilePage() {
           >
             Edit
           </button>
+        )}
+
+        <br />
+
+        {!editMode && (
+            <button
+                className=" bg-[#416555] mt-4 hover:bg-green-300 text-white font-bold py-2 px-4 rounded
+          focus:outline-none focus:shadow-outline"
+                onClick={delete_user}
+            >
+              Delete
+            </button>
         )}
       </div>
     </div>

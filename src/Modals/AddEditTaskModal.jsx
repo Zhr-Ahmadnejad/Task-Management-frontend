@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import axios from "axios"; // Import axios for making HTTP requests
-import boardsSlice from '../Redux/boardsSlice';
+import axios from "axios";
 import crossIcon from "../Assets/crossIcone.png";
-import icondown from '../Assets/icon-chevron-down.svg';
 import XIcon from "../Components/icons/x-icon.jsx";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import Cookies from "js-cookie";
 
 function AddEditTaskModal({
   type,
   device,
-  setIsTaskModalOpen,
   setIsAddTaskModalOpen,
   taskIndex,
   prevColIndex = 0,
 }) {
-  const dispatch = useDispatch();
+
+
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const [isValid, setIsValid] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const board = useSelector((state) => state.boards).find(
@@ -27,12 +26,45 @@ function AddEditTaskModal({
   const columns = board.columns;
   const col = columns.find((col, index) => index === prevColIndex);
   const task = col ? col.tasks.find((task, index) => index === taskIndex) : [];
-  const [status, setStatus] = useState(columns[prevColIndex].name);
-  const [newColIndex, setNewColIndex] = useState(prevColIndex);
+
+  const [status, setStatus] = useState("");
+
+
   const [subtasks, setSubtasks] = useState([
     { title: "", isCompleted: false, id: uuidv4() },
     { title: "", isCompleted: false, id: uuidv4() },
   ]);
+
+  const [taskState, setTaskState] = useState([]);
+  const [stateId, setStateId] = useState("");
+
+  let [searchParams] = useSearchParams();
+  let queryParam = searchParams.get("");
+
+  const navigate = useNavigate()
+
+  const user_token = Cookies.get('token');
+
+
+  useEffect(() => {
+
+    (async ()=>{
+      try {
+        const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
+          headers : {
+            Authorization : `Bearer ${user_token}`
+          }
+        })
+
+        if (data){
+          setTaskState(data.taskStates)
+          setStateId(data.taskStates[0].id)
+        }
+      }catch (err){
+        console.log(err);
+      }
+    })()
+  }, []);
 
   const onChangeSubtasks = (id, newValue) => {
     setSubtasks((prevState) => {
@@ -45,11 +77,15 @@ function AddEditTaskModal({
 
   const onChangeStatus = (e) => {
     setStatus(e.target.value);
-    setNewColIndex(e.target.selectedIndex);
+
+    const find_id = taskState.find((itm)=> itm.stateName === e.target.value)
+
+    setStateId(find_id.id)
+
   };
 
   const validate = () => {
-    setIsValid(false);
+
     if (!title.trim()) {
       return false;
     }
@@ -58,7 +94,7 @@ function AddEditTaskModal({
         return false;
       }
     }
-    setIsValid(true);
+
     return true;
   };
 
@@ -77,41 +113,62 @@ function AddEditTaskModal({
     setSubtasks((prevState) => prevState.filter((el) => el.id !== id));
   };
 
-  const onSubmit = async (type) => {
-    if (type === "add") {
-      const token = localStorage.getItem("token"); // Retrieve the token from local storage
-      const taskData = {
-        title,
-        description,
-        subtasks,
-        status,
-        newColIndex,
-      };
-      try {
-        const response = await axios.post(
-          "http://localhost:8088/api/user/board/tasks",
-          taskData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Attach the token to the request headers
-            },
-          }
-        );
-        dispatch(boardsSlice.actions.addTask(response.data));
-      } catch (error) {
-        console.error("Error creating task:", error);
-      }
-    } else {
-      // Edit task logic
-    }
-  };
-
-
   const closeHandler = (e) => {
     if (e.target !== e.currentTarget) {
       return;
     }
     setIsAddTaskModalOpen(false);
+  }
+
+
+
+  const create_task_handler = async ()=>{
+
+    const isValid = validate();
+
+    if (isValid) {
+      try {
+        const subtaskSort = subtasks.map((itm)=>{
+          return itm.title
+        })
+
+        const {data} = await axios.post("http://localhost:8088/api/user/board/tasks",{
+          taskName: title,
+          description: description,
+          taskStateId : stateId,
+          boardId : queryParam,
+          subTasks: subtaskSort
+        },{
+          headers : {
+            Authorization : `Bearer ${user_token}`
+          }
+        })
+
+        if(data){
+          setIsAddTaskModalOpen(false)
+          navigate(0)
+        }
+
+      }catch (err){
+        console.log(err)
+      }
+
+      // type === "edit" && setIsTaskModalOpen(false);
+    }
+
+
+
+
+
+
+    // () => {
+    //   const isValid = validate();
+    //   if (isValid) {
+    //     onSubmit(type);
+    //     setIsAddTaskModalOpen(false);
+    //     type === "edit" && setIsTaskModalOpen(false);
+    //   }
+    // }
   }
 
   return (
@@ -223,8 +280,8 @@ function AddEditTaskModal({
               onChange={onChangeStatus}
               className=" select-status cursor-pointer flex-grow px-4 py-2 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#416555] outline-none"
           >
-            {columns.map((column, index) => (
-                <option key={index}>{column.name}</option>
+            {taskState.map((column, index) => (
+                <option key={index}>{column.stateName}</option>
             ))}
           </select>
 
@@ -233,18 +290,12 @@ function AddEditTaskModal({
 
 
           <button
-              onClick={() => {
-                const isValid = validate();
-                if (isValid) {
-                  onSubmit(type);
-                  setIsAddTaskModalOpen(false);
-                  type === "edit" && setIsTaskModalOpen(false);
-                }
-              }}
+              onClick={create_task_handler}
               className=" w-full items-center text-white bg-[#416555] py-2 rounded-full "
           >
             {type === "edit" ? " save edit" : "Create task"}
           </button>
+
         </div>
       </div>
     </div>

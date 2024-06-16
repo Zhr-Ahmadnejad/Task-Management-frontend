@@ -173,7 +173,7 @@ function Header({setBoardModalOpen, boardModalOpen}) {
 
             {
                 isTaskModalOpen && (
-                    <AddEditTaskModal setIsAddTaskModalOpen={setIsTaskModalOpen} type="add" device="mobile"/>
+                    <AddEditTaskModal setIsAddTaskModalOpen={setIsTaskModalOpen} type="add" device="mobile" />
                 )
             }
             {

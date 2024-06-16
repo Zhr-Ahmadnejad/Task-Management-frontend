@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import AddEditBoardModal from "../Modals/AddEditBoardModal";
 import Column from "./Column";
 import EmptyBoard from "./EmptyBoard";
@@ -29,12 +28,9 @@ function Center() {
 
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
 
-  const boards = useSelector((state) => state.boards);
-  const board = boards.find((board) => board.isActive === true);
-  const columns = board.columns;
-
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [task_state, setTask_state] = useState([])
+
 
   let [searchParams] = useSearchParams();
   let queryParam = searchParams.get("");
@@ -47,6 +43,7 @@ function Center() {
       const user_token = Cookies.get('token');
 
       if (queryParam){
+
         try {
           const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
             headers : {
@@ -78,6 +75,10 @@ function Center() {
     })()
   }, [queryParam]);
 
+
+
+
+
   return (
     <div style={{ paddingTop: "100px" }}
     className={
@@ -97,14 +98,11 @@ function Center() {
 
       {task_state.length > 0 ? (
         <>
-          {task_state.map((col) => (
-            <Column key={col.id} dataCol={col} />
+          {task_state.map((col,i) => (
+            <Column key={col.id} dataCol={col} colIndex={i} />
           ))}
           <div
-            onClick={() => {
-              console.log("hello")
-              // setIsBoardModalOpen(true);
-            }}
+            onClick={() => setIsBoardModalOpen(true)}
             className=" h-screen dark:bg-[#2b2c3740] flex justify-center items-center font-bold text-2xl hover:text-[#416555] transition duration-300 cursor-pointer bg-[#E9EFFA] scrollbar-hide mb-2   mx-5 pt-[90px] min-w-[280px] text-[#828FA3] mt-[135px] rounded-lg "
           >
             + New Column
@@ -118,7 +116,7 @@ function Center() {
       {isBoardModalOpen && (
         <AddEditBoardModal
           type="edit"
-          setIsBoardModalOpen={setIsBoardModalOpen}
+          setBoardModalOpen={setIsBoardModalOpen}
         />
       )}
     </div>
