@@ -56,13 +56,13 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
 
     const signoutHandler = () => {
         Cookies.remove('token')
-        navigate("/signup")
-        navigate(0)
+        navigate("/signup",{
+            replace : true
+        })
     }
 
     const board_handle = (id)=>{
         navigate(`/home?=${id}`)
-        // () => dispatch(boardsSlice.actions.setBoardActive({index}))
     }
 
     let [searchParams] = useSearchParams();

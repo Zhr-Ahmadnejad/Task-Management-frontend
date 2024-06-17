@@ -56,7 +56,9 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
 
     const signoutHandler = () => {
         Cookies.remove('token')
-        navigate(0)
+        navigate("/signup",{
+            replace : true
+        })
     }
 
     const board_handle = (id)=>{

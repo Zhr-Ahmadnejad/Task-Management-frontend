@@ -32,19 +32,19 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     useEffect(() => {
 
 
-        (async ()=>{
+        (async () => {
             try {
-                const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
-                    headers : {
-                        Authorization : `Bearer ${user_token}`
+                const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
+                    headers: {
+                        Authorization: `Bearer ${user_token}`
                     }
                 })
 
-                if (data){
+                if (data) {
 
                     setNameBoard(data.boardName)
                 }
-            }catch (err){
+            } catch (err) {
                 console.log(err)
             }
         })()
@@ -64,24 +64,24 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     const onDeleteBtnClick = async () => {
 
         try {
-            const {data} = await axios.delete(`http://localhost:8088/api/user/boards/${+queryParam}`,{
-                headers : {
-                    Authorization : `Bearer ${user_token}`
+            const {data} = await axios.delete(`http://localhost:8088/api/user/boards/${+queryParam}`, {
+                headers: {
+                    Authorization: `Bearer ${user_token}`
                 }
             })
 
 
-            if (data){
+            if (data) {
                 setIsDeleteModalOpen(false)
                 navigate("/")
                 navigate(0)
             }
-        }catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    const cancelBtn = ()=> setIsDeleteModalOpen(false)
+    const cancelBtn = () => setIsDeleteModalOpen(false)
 
     const onDropdownClick = () => {
         setOpenDropdown(state => !state)
@@ -99,14 +99,13 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     }, [])
 
 
-    const open_drop_handle = ()=>{
+    const open_drop_handle = () => {
         setBoardType("edit");
         setOpenDropdown(false)
         setIsElipsisMenuOpen((prevState) => !prevState);
     }
 
-    const close_dropDown = ()=> setIsElipsisMenuOpen(false)
-
+    const close_dropDown = () => setIsElipsisMenuOpen(false)
 
 
     return (
@@ -117,20 +116,24 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                 {/* Left Side */}
                 <div className=' flex items-center space-x-2 md:space-x-4'>
                     <img src={logo} alt='logo' width="300" height="200" className=' hidden md:inline-block'/>
+
                     <div className='flex items-center'>
                         <h3 className=' truncate max-w-[200px] md:text-2xl text-xl font-bold md:ml-20 font-sans text-white'>
                             {nameBoard}
                         </h3>
-                        <img src={openDropdown ? iconup : icondown} alt='dropdown icon'
-                             className=' h-9 w-9 ml-3 cursor-pointer md:hidden'
-                             onClick={onDropdownClick}/>
+                        <img
+                            src={openDropdown ? iconup : icondown} alt='dropdown icon'
+                            className=' h-5 w-5 ml-3 mt-2.5 cursor-pointer md:hidden'
+                            onClick={onDropdownClick}
+                        />
                     </div>
+
                 </div>
 
                 {/* Right Side */}
                 <div className=' flex items-center space-x-4 md:space-x-6 '>
                     <button
-                        onClick={() =>  setIsTaskModalOpen((prevState) => !prevState)}
+                        onClick={() => setIsTaskModalOpen((prevState) => !prevState)}
                         className='hidden md:block button'
                     >
                         + Add New Task
@@ -167,13 +170,13 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                 </div>
                 {
                     openDropdown &&
-                    <HeaderDropdown setBoardModalOpen={setBoardModalOpen} setOpenDropdown={setOpenDropdown} />
+                    <HeaderDropdown setBoardModalOpen={setBoardModalOpen} setOpenDropdown={setOpenDropdown}/>
                 }
             </header>
 
             {
                 isTaskModalOpen && (
-                    <AddEditTaskModal setIsAddTaskModalOpen={setIsTaskModalOpen} type="add" device="mobile" />
+                    <AddEditTaskModal setIsAddTaskModalOpen={setIsTaskModalOpen} type="add" device="mobile"/>
                 )
             }
             {

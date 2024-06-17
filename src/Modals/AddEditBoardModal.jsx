@@ -26,7 +26,7 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
     }, []);
 
     useEffect(() => {
-        if (type === 'edit'){
+        if (type === 'edit' || type === 'edit-2'){
             try {
                 (async ()=>{
                     const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
@@ -93,13 +93,14 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
     const navigate = useNavigate();
 
     const onSubmit = async () => {
+
         const isValid = validate();
         if (isValid) {
 
             const board_columns = newColumns.map(item => item.name);
 
-
             if (type === 'add'){
+
                 try {
                     const {data} = await axios.post("http://localhost:8088/api/user/boards", {
                         boardName: name,
@@ -136,11 +137,12 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                     }
 
                 }
-            } else if (type === 'edit'){
+            } else if (type === 'edit' || type === 'edit-2'){
 
                 try {
+
                     await axios.put(`http://localhost:8088/api/user/boards/${+queryParam}`, {
-                        boardName: name,
+                        boardName: type === 'edit-2' ? null : name,
                         taskStates: board_columns.length > 0 ? board_columns : null
                     }, {
                         headers: {
@@ -185,18 +187,20 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                     {type === 'edit' ? 'Edit' : 'Add New'} Board
                 </h3>
 
-                <div className="mt-8 flex flex-col space-y-1">
-                    <label className='text-sm dark:text-white text-gray-500'>
-                        Board Name
-                    </label>
-                    <input
-                        className='bg-transparent px-4 py-2 rounded-md text-sm border border-gray-600 outline-none focus:outline-[#416555] outline-1 right-0'
-                        placeholder='e.g Web Design'
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        id='board-name-input'
-                    />
-                </div>
+                {type !== 'edit-2' &&
+                    <div className="mt-8 flex flex-col space-y-1">
+                        <label className='text-sm dark:text-white text-gray-500'>
+                            Board Name
+                        </label>
+                        <input
+                            className='bg-transparent px-4 py-2 rounded-md text-sm border border-gray-600 outline-none focus:outline-[#416555] outline-1 right-0'
+                            placeholder='e.g Web Design'
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            id='board-name-input'
+                        />
+                    </div>
+                }
 
                 <div className=' mt-8 flex flex-col space-y-3'>
                     <label
@@ -206,9 +210,10 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                     {
                         newColumns.map((column, index) => (
                             <div key={index} className='flex items-center w-full'>
-                                <input className='bg-transparent flex-grow px-4 py-2 rounded-mdtext-sm border border-gray-600 outline-none focus: outline-[#416555]'
-                                       onChange={(e) => {
-                                           onChange(column.id, e.target.value);
+                                <input
+                                    className='bg-transparent flex-grow px-4 py-2 rounded-mdtext-sm border border-gray-600 outline-none focus: outline-[#416555]'
+                                    onChange={(e) => {
+                                        onChange(column.id, e.target.value);
                                        }}
                                        value={column.name}
                                        type='text'

@@ -115,7 +115,7 @@ function Center() {
       )}
       {isBoardModalOpen && (
         <AddEditBoardModal
-          type="edit"
+          type="edit-2"
           setBoardModalOpen={setIsBoardModalOpen}
         />
       )}

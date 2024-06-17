@@ -60,7 +60,7 @@ function App() {
                             )
                         }/>
                         <Route path="/" element={tokenData ? <Navigate to="/home"/> : <LoginPage/>}/>
-                        <Route path="/signup" element={tokenData ? <Navigate to="/home"/> : <SignupPage/>}/>
+                        <Route path="/signup" element={<SignupPage/>}/>
                         <Route path="/aboutUs" element={tokenData ? <AboutUs/> : <Navigate to="/"/>}/>
                         <Route path="/ProfilePage" element={tokenData ? <ProfilePage/> : <Navigate to="/"/>}/>
                     </Routes>
