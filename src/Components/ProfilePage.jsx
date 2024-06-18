@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Cookies from "js-cookie";
 import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 
 function ProfilePage() {
@@ -73,7 +74,10 @@ function ProfilePage() {
                 }
             })
 
-            console.log(data)
+            if(data){
+                const notify = () => toast.success("user edited.");
+                notify()
+            }
         } catch (err) {
             console.log(err)
         }
@@ -177,7 +181,7 @@ function ProfilePage() {
                 </div>
                 {!editMode && (
                     <button
-                        className=" bg-[#416555] hover:bg-green-300 text-white font-bold py-2 px-4 rounded
+                        className=" bg-[#416555] hover:bg-green-300 text-white font-bold py-2 px-4 rounded w-full
           focus:outline-none focus:shadow-outline"
                         type="submit"
                         onClick={handleEdit}
@@ -190,8 +194,7 @@ function ProfilePage() {
 
                 {!editMode && (
                     <button
-                        className=" bg-[#416555] mt-4 hover:bg-green-300 text-white font-bold py-2 px-4 rounded
-          focus:outline-none focus:shadow-outline"
+                        className=" bg-red-500 mt-4 w-full hover:bg-red-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         onClick={delete_user}
                     >
                         Delete
@@ -200,7 +203,7 @@ function ProfilePage() {
 
                 {editMode &&
                     <button
-                        className=" bg-[#416555] mt-4 hover:bg-green-300 text-white font-bold py-2 px-4 rounded
+                        className=" bg-[#416555] w-full mt-4 hover:bg-green-300 text-white font-bold py-2 px-4 rounded
           focus:outline-none focus:shadow-outline"
                         onClick={back_handler}
                     >
