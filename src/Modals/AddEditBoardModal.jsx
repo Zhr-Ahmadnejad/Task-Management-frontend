@@ -9,7 +9,10 @@ import {toast} from "react-toastify";
 
 
 function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
+    console.log(type)
+
     const [name, setName] = useState('');
+    const [name_avalie, setName_avalie] = useState('');
     const [first_add, setFirst_add] = useState(false)
     const [newColumns, setNewColumns] = useState([
         {name: 'Todo', task: [], id: uuidv4()},
@@ -36,6 +39,7 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                     })
 
                     setName(data.boardName);
+                    setName_avalie(data.boardName);
 
                     const new_column_sort = data.taskStates.map((itm)=>{
 
@@ -142,8 +146,8 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                 try {
 
                     await axios.put(`http://localhost:8088/api/user/boards/${+queryParam}`, {
-                        boardName: type === 'edit-2' ? null : name,
-                        taskStates: board_columns.length > 0 ? board_columns : null
+                        boardName: type === 'edit-2' ? null : name_avalie === name ? null : name,
+                        taskStates: board_columns.length > 0 ? board_columns : []
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`

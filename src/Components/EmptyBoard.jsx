@@ -65,7 +65,7 @@ function EmptyBoard({ type ,check, setCheck}) {
       {isBoardModalOpen && (
         <AddEditBoardModal
           type={type}
-          setIsBoardModalOpen={setIsBoardModalOpen}
+          setBoardModalOpen={setIsBoardModalOpen}
         />
       )}
     </div>
