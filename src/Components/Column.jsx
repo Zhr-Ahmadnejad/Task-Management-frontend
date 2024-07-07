@@ -25,6 +25,10 @@ function Column({colIndex,dataCol}) {
   const [column_data, setColumn_data] = useState([]);
   const [check, setCheck] = useState(1);
 
+  const sortedData = column_data.sort((a, b) => parseInt(a.priority) - parseInt(b.priority));
+
+
+
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, []);
@@ -37,25 +41,50 @@ function Column({colIndex,dataCol}) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    (async ()=>{
-      try {
-        const {data} = await axios.get("http://localhost:8088/api/user/board/tasks",{
-          headers:{
-            'Authorization': `Bearer ${user_token}`,
-            'taskStateId': dataCol.id,
-            'boardId': queryParam
-          }
-        })
+    if (queryParam === 'dashboard'){
+      (async ()=>{
 
-        if (data){
-          setColumn_length(data.length);
-          setColumn_data(data);
+        try {
+          const {data} = await axios.get("http://localhost:8088/api/user/board/tasks/start", {
+            headers: {
+              Authorization: `Bearer ${user_token}`
+            }
+          })
+
+          if (data){
+            setColumn_length(data.length);
+            setColumn_data(data);
+          }
+
+
+        } catch (err) {
+          console.log(err)
         }
 
-      }catch (err){
-        console.log(err)
-      }
-    })()
+      })()
+
+    }else {
+      (async ()=>{
+        try {
+          const {data} = await axios.get("http://localhost:8088/api/user/board/tasks",{
+            headers:{
+              'Authorization': `Bearer ${user_token}`,
+              'taskStateId': dataCol.id,
+              'boardId': queryParam
+            }
+          })
+
+          if (data){
+            setColumn_length(data.length);
+            setColumn_data(data);
+          }
+
+        }catch (err){
+          console.log(err)
+        }
+      })()
+
+    }
   }, [queryParam,check]);
 
 
@@ -104,7 +133,7 @@ function Column({colIndex,dataCol}) {
       </div>
 
 
-      {column_data.map((task, index) => (
+      {sortedData.map((task, index) => (
         <Task key={index} col_data={task} taskIndex={index} colIndex={colIndex} setCheck={setCheck}/>
       ))}
 

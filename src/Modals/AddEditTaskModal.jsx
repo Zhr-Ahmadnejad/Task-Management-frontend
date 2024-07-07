@@ -15,6 +15,7 @@ function AddEditTaskModal({
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [priority, setPriority] = useState(1);
 
 
     const [status, setStatus] = useState("");
@@ -46,6 +47,7 @@ function AddEditTaskModal({
             setTitle(data_edited.taskName)
             setDescription(data_edited?.description);
             setSubtasks(data_edited?.subTasks);
+            setPriority(+data_edited.priority);
 
             (async () => {
                 try {
@@ -148,7 +150,8 @@ function AddEditTaskModal({
                         taskName: title ? title : null,
                         description: description ? description : null,
                         taskStateId: stateId ? stateId : null,
-                        subTasks: subtaskSort.length > 0 ? subtaskSort : null
+                        subTasks: subtaskSort.length > 0 ? subtaskSort : null,
+                        priority
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -172,7 +175,8 @@ function AddEditTaskModal({
                         description: description,
                         taskStateId: stateId,
                         boardId: queryParam,
-                        subTasks: subtaskSort
+                        subTasks: subtaskSort,
+                        priority,
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -228,6 +232,20 @@ function AddEditTaskModal({
                         onChange={(e) => setTitle(e.target.value)}
                         id="task-name-input"
                         type="text"
+                        className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-1  ring-0  "
+                        placeholder=" e.g Take coffee break"
+                    />
+                </div>
+
+                <div className="mt-8 flex flex-col space-y-1">
+                    <label className="  text-sm dark:text-white text-gray-500">
+                        اولویت
+                    </label>
+                    <input
+                        value={priority}
+                        onChange={(e) => setPriority(+e.target.value)}
+                        id="task-name-input"
+                        type="number"
                         className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-1  ring-0  "
                         placeholder=" e.g Take coffee break"
                     />

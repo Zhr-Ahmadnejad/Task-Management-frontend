@@ -65,6 +65,8 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
         navigate(`/home?=${id}`)
     }
 
+    const go_to_dashboard = ()=> navigate('/home?=dashboard')
+
     let [searchParams] = useSearchParams();
     let queryParam = searchParams.get("");
 
@@ -84,14 +86,14 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                                 </h3>
                                 <div className='flex flex-col h-[60vh] justify-between'>
                                     <div>
-                                        {all_boards?.map((itm)=>(
+                                        {all_boards?.map((itm) => (
                                             <div
                                                 className={` flex items-baseline space-x-2 px-5 mr-8 rounded-r-full py-4 duration-500 ease-in-out 
                                                    cursor-pointer hover:bg-white hover:text-[#416555] dark:hover:bg-white dark:hover:text-[#416555] dark:text-white
                                                      ${queryParam === itm.id.toString() && " bg-[#416555] rounded-r-full text-white mr-8"}
                                                `}
                                                 key={itm.id}
-                                                onClick={()=> board_handle(itm.id)}
+                                                onClick={() => board_handle(itm.id)}
                                             >
                                                 <img src={boardIcon} className=' h-4'/>
                                                 <p className=' text-lg font-bold'>
@@ -112,6 +114,18 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                                                 Create New Board
                                             </p>
                                         </div>
+
+                                        <div
+                                            onClick={go_to_dashboard}
+                                            className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
+                                                                  text-green-300 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'
+                                        >
+                                            <img src={boardIcon} className=' h-4' alt={"board icon"}/>
+                                            <p className=' text-lg font-bold'>
+                                                Dashboard
+                                            </p>
+                                        </div>
+
                                         {/* About us Button  */}
 
                                         <div

@@ -42,7 +42,7 @@ function Center() {
     (async ()=>{
       const user_token = Cookies.get('token');
 
-      if (queryParam){
+      if (queryParam && queryParam !== 'dashboard'){
 
         try {
           const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`,{
@@ -57,7 +57,17 @@ function Center() {
         }catch (err){
           console.log(err)
         }
-      }else {
+
+      }else if (queryParam === 'dashboard'){
+
+        setTask_state([{
+          "id": 3,
+          "stateName": "شروع",
+          "boardId": 2
+        }])
+
+
+      } else {
         try {
           const {data} = await axios.get("http://localhost:8088/api/user/boards", {
             headers: {
@@ -99,9 +109,11 @@ function Center() {
 
       {task_state.length > 0 ? (
         <>
+
           {task_state.map((col,i) => (
             <Column key={col.id} dataCol={col} colIndex={i} />
           ))}
+
           <div
             onClick={() => setIsBoardModalOpen(true)}
             className=" h-screen dark:bg-[#2b2c3740] flex justify-center items-center font-bold text-2xl hover:text-[#416555] transition duration-300 cursor-pointer bg-[#E9EFFA] scrollbar-hide mb-2   mx-5 pt-[90px] min-w-[280px] text-[#828FA3] mt-[135px] rounded-lg "

@@ -63,10 +63,16 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
 
     const board_handle = (id)=>{
         navigate(`/home?=${id}`)
+        setOpenDropdown(false)
     }
 
     let [searchParams] = useSearchParams();
     let queryParam = searchParams.get("");
+
+    const go_to_dashboard = ()=> {
+        navigate('/home?=dashboard')
+        setOpenDropdown(false)
+    }
 
 
     return (
@@ -96,7 +102,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                             className={`cursor-pointer dark:text-white flex items-baseline space-x-2 px-5 py-4 
                                 ${queryParam === itm.id.toString() && 'bg-[#416555] rounded-r-full text-white mr-8'}`}
                             key={itm.id}
-                            onClick={()=> board_handle(itm.id)}
+                            onClick={() => board_handle(itm.id)}
                         >
 
                             <img src={boardIcon} className='h-4'/>
@@ -114,6 +120,15 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                         <img src={boardIcon} className='h-4 '/>
                         <p className='text-lg font-bold'>
                             Create New Board
+                        </p>
+                    </div>
+
+                    <div className=' cursor-pointer flex items-baseline space-x-2 text-[#416555] px-5 py-4'
+                         onClick={go_to_dashboard}
+                    >
+                        <img src={boardIcon} className='h-4 '/>
+                        <p className='text-lg font-bold'>
+                            Dashboard
                         </p>
                     </div>
                     {/* About us Button  */}

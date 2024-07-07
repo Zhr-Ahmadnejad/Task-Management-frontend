@@ -30,25 +30,26 @@ function Header({setBoardModalOpen, boardModalOpen}) {
     const user_token = Cookies.get('token');
 
     useEffect(() => {
+        if (queryParam === 'dashboard'){
+            setNameBoard("داشبورد")
+        }else {
+            (async () => {
+                try {
+                    const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
+                        headers: {
+                            Authorization: `Bearer ${user_token}`
+                        }
+                    })
 
+                    if (data) {
 
-        (async () => {
-            try {
-                const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
-                    headers: {
-                        Authorization: `Bearer ${user_token}`
+                        setNameBoard(data.boardName)
                     }
-                })
-
-                if (data) {
-
-                    setNameBoard(data.boardName)
+                } catch (err) {
+                    console.log(err)
                 }
-            } catch (err) {
-                console.log(err)
-            }
-        })()
-
+            })()
+        }
     }, [queryParam]);
 
     const setOpenEditModal = () => {
@@ -139,22 +140,26 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                         + Add New Task
                     </button>
 
-                    <button
-                        onClick={
-                            () => {
-                                // setOpenAddEditTassk(state => !state)
-                                setIsTaskModalOpen((prevState) => !prevState)
-                            }
-                        }
-                        className='button py-1 px-3 md:hidden'>
-                        +
-                    </button>
-                    <img
-                        onClick={open_drop_handle}
-                        src={elipsis}
-                        alt="elipsis"
-                        className=" cursor-pointer h-6"
-                    />
+                    {queryParam !== 'dashboard' &&
+                        <>
+                            <button
+                                onClick={
+                                    () => {
+                                        // setOpenAddEditTassk(state => !state)
+                                        setIsTaskModalOpen((prevState) => !prevState)
+                                    }
+                                }
+                                className='button py-1 px-3 md:hidden'>
+                                +
+                            </button>
+                            <img
+                                onClick={open_drop_handle}
+                                src={elipsis}
+                                alt="elipsis"
+                                className=" cursor-pointer h-6"
+                            />
+                        </>
+                    }
 
                     {
                         isElipsisMenuOpen &&

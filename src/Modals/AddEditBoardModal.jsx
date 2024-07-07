@@ -9,14 +9,14 @@ import {toast} from "react-toastify";
 
 
 function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
-    console.log(type)
 
     const [name, setName] = useState('');
     const [name_avalie, setName_avalie] = useState('');
     const [first_add, setFirst_add] = useState(false)
+
     const [newColumns, setNewColumns] = useState([
-        {name: 'Todo', task: [], id: uuidv4()},
-        {name: 'Doing', task: [], id: uuidv4()},
+        {name: 'شروع', task: [], id: uuidv4()},
+        {name: 'پایان', task: [], id: uuidv4()},
     ]);
 
     const user_token = Cookies.get('token');
@@ -169,6 +169,14 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
 
     };
 
+    const addNewColumnBetween = () => {
+        const newColumn = { name: '', task: [], id: uuidv4() };
+        const newColumnsArray = [...newColumns];
+        const insertIndex = newColumnsArray.length - 1;
+        newColumnsArray.splice(insertIndex, 0, newColumn);
+        setNewColumns(newColumnsArray);
+    };
+
     return (
         <div
             onClick={(e) => {
@@ -234,12 +242,7 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                 <div>
                     <button
                         className='w-full items-center hover:opacity-75 dark:text-[#416555] dark:bg-white text-white bg-[#416555] py-2 mt-2 rounded-full'
-                        onClick={() => {
-                            setNewColumns((state) => [
-                                ...state,
-                                {name: '', task: [], id: uuidv4()}
-                            ]);
-                        }}
+                        onClick={addNewColumnBetween}
                     >
                         + Add new column
                     </button>
