@@ -112,10 +112,9 @@ function TaskModal({taskIndex, colIndex, setIsTaskModalOpen, task_data, setCheck
 
     const handle_sub_task_change = async (e, id) => {
 
-
         try {
             const {data} = await axios.put(`http://localhost:8088/api/user/boards/tasks/subtasks/isActive/${id}`, {
-                isActive: false
+                isActive: "true"
             }, {
                 headers: {
                     'Authorization': `Bearer ${user_token}`,

@@ -31,6 +31,9 @@ function Center() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [task_state, setTask_state] = useState([])
 
+  const [all_task_data, setAll_task_data] = useState([]);
+
+
 
   let [searchParams] = useSearchParams();
   let queryParam = searchParams.get("");
@@ -87,9 +90,6 @@ function Center() {
 
 
 
-
-
-
   return (
     <div style={{ paddingTop: "100px" }}
     className={
@@ -111,7 +111,7 @@ function Center() {
         <>
 
           {task_state.map((col,i) => (
-            <Column key={col.id} dataCol={col} colIndex={i} />
+            <Column key={col.id} dataCol={col} colIndex={i} column_all={task_state} setAll_task_data={setAll_task_data} all_task_data={all_task_data}/>
           ))}
 
           <div
