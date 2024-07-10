@@ -90,31 +90,32 @@ function Column({colIndex, dataCol,column_all,setAll_task_data,all_task_data}) {
     }, [queryParam, check]);
 
     useEffect(() => {
-        (async () => {
-            try {
-                const {data} = await axios.get("http://localhost:8088/api/user/board/tasks", {
-                    headers: {
-                        'Authorization': `Bearer ${user_token}`,
-                        'taskStateId': dataCol.id,
-                        'boardId': queryParam
-                    }
-                })
+        if(queryParam !== 'dashboard'){
+            (async () => {
+                try {
+                    const {data} = await axios.get("http://localhost:8088/api/user/board/tasks", {
+                        headers: {
+                            'Authorization': `Bearer ${user_token}`,
+                            'taskStateId': dataCol.id,
+                            'boardId': queryParam
+                        }
+                    })
 
+                    const filteredData = data.map(item => {
+                        const { subTasks, boardId, description, taskName, ...rest } = item;
+                        return rest;
+                    });
 
-                const filteredData = data.map(item => {
-                    const { subTasks, boardId, description, taskName, ...rest } = item;
-                    return rest;
-                });
+                    setAll_task_data((prev) => {
+                        const newData = filteredData.filter(item => !prev.some(prevItem => prevItem.id === item.id));
+                        return [...prev, ...newData];
+                    });
 
-                setAll_task_data((prev) => {
-                    const newData = filteredData.filter(item => !prev.some(prevItem => prevItem.id === item.id));
-                    return [...prev, ...newData];
-                });
-
-            } catch (err) {
-                console.log(err)
-            }
-        })()
+                } catch (err) {
+                    console.log(err)
+                }
+            })()
+        }
     }, [user_token, dataCol.id, queryParam]);
 
 
@@ -124,16 +125,18 @@ function Column({colIndex, dataCol,column_all,setAll_task_data,all_task_data}) {
             e.dataTransfer.getData("text")
         );
 
-        if (colIndex !== prevColIndex && dataCol.stateName !== "پایان") {
-            const lowerPriorityTasks = column_data.filter(
-                (task) => task.priority < priority && task.taskStateId !== 8
-            );
-
-            if (lowerPriorityTasks.length > 0) {
-                alert("ابتدا باید taskهای با اولویت پایین‌تر تکمیل شوند.");
-                return;
-            }
-        }
+        // if (colIndex !== prevColIndex && dataCol.stateName !== "پایان") {
+        //     const lowerPriorityTasks = column_data.filter(
+        //         (task) => task.priority < priority
+        //     );
+        //
+        //     console.log(lowerPriorityTasks)
+        //
+        //     if (lowerPriorityTasks.length > 0) {
+        //         alert("ابتدا باید taskهای با اولویت پایین‌تر تکمیل شوند.");
+        //         return;
+        //     }
+        // }
 
         try {
             const {data} = await axios.put(

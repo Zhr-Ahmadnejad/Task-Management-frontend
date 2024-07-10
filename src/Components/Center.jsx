@@ -111,26 +111,36 @@ function Center() {
         <>
 
           {task_state.map((col,i) => (
-            <Column key={col.id} dataCol={col} colIndex={i} column_all={task_state} setAll_task_data={setAll_task_data} all_task_data={all_task_data}/>
+            <Column
+                key={col.id}
+                dataCol={col}
+                colIndex={i}
+                column_all={task_state}
+                setAll_task_data={setAll_task_data}
+                all_task_data={all_task_data}
+            />
           ))}
 
-          <div
-            onClick={() => setIsBoardModalOpen(true)}
-            className=" h-screen dark:bg-[#2b2c3740] flex justify-center items-center font-bold text-2xl hover:text-[#416555] transition duration-300 cursor-pointer bg-[#E9EFFA] scrollbar-hide mb-2   mx-5 pt-[90px] min-w-[280px] text-[#828FA3] mt-[135px] rounded-lg "
-          >
-            + New Column
-          </div>
+          {queryParam !== 'dashboard' &&
+              <div
+                  onClick={() => setIsBoardModalOpen(true)}
+                  className=" h-screen dark:bg-[#2b2c3740] flex justify-center items-center font-bold text-2xl hover:text-[#416555] transition duration-300 cursor-pointer bg-[#E9EFFA] scrollbar-hide mb-2   mx-5 pt-[90px] min-w-[280px] text-[#828FA3] mt-[135px] rounded-lg "
+              >
+                + New Column
+              </div>
+          }
+
         </>
       ) : (
-        <>
-          <EmptyBoard type="edit" />
-        </>
+          <>
+            <EmptyBoard type="edit"/>
+          </>
       )}
       {isBoardModalOpen && (
-        <AddEditBoardModal
-          type="edit-2"
-          setBoardModalOpen={setIsBoardModalOpen}
-        />
+          <AddEditBoardModal
+              type="edit-2"
+              setBoardModalOpen={setIsBoardModalOpen}
+          />
       )}
     </div>
   );

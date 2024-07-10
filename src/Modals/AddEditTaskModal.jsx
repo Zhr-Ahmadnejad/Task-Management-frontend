@@ -15,7 +15,7 @@ function AddEditTaskModal({
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [priority, setPriority] = useState(1);
+    const [priority, setPriority] = useState(0);
 
 
     const [status, setStatus] = useState("");
@@ -151,7 +151,7 @@ function AddEditTaskModal({
                         description: description ? description : null,
                         taskStateId: stateId ? stateId : null,
                         subTasks: subtaskSort.length > 0 ? subtaskSort : null,
-                        priority
+                        priority : priority === 0 ? null : priority
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -176,7 +176,7 @@ function AddEditTaskModal({
                         taskStateId: stateId,
                         boardId: queryParam,
                         subTasks: subtaskSort,
-                        priority,
+                        priority : priority === 0 ? null : priority
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`

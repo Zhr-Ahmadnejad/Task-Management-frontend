@@ -111,7 +111,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                     ))}
 
                     <div className=' cursor-pointer flex items-baseline space-x-2 text-[#416555] px-5 py-4'
-                        /// ba click roye in gozine drowpdown baste va setboardmodelopen baz mishe
+
                          onClick={() => {
                              setBoardModalOpen(true)
                              setOpenDropdown(false)
@@ -142,6 +142,17 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                         <img src={aboutUsIcon} alt='signout' className='h-4'/>
                         <p className=' text-lg font-bold'>
                             About Us
+                        </p>
+                    </div>
+                    <div
+                        onClick={() => {
+                            window.location.href = '/ProfilePage';
+                        }}
+                        className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
+                    text-[#416555] px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
+                        <img src={aboutUsIcon} alt='signout' className='h-4'/>
+                        <p className=' text-lg font-bold'>
+                            setting
                         </p>
                     </div>
                     <div

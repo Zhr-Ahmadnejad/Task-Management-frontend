@@ -229,11 +229,16 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                                        }}
                                        value={column.name}
                                        type='text'
+                                    disabled={column.name === 'شروع' || column.name === 'پایان'}
                                 />
-                                <img src={crossIcon}
-                                     className='w-5 h-5 cursor-pointer m-4'
-                                     onClick={() => onDelete(column.id)}
-                                />
+
+                                {column.name !== 'شروع' && column.name !== 'پایان' ?
+                                    <img src={crossIcon}
+                                         className='w-5 h-5 cursor-pointer m-4'
+                                         onClick={() => onDelete(column.id)}
+                                    /> : <div className={"w-14 h-5"} />
+                                }
+
                             </div>
                         ))
                     }

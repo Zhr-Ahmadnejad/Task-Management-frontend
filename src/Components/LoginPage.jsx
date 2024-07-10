@@ -22,7 +22,7 @@ function LoginPage() {
       })
 
       Cookies.set('token', data, { expires: 7 })
-      navigate("/home");
+      navigate("/home?=dashboard");
 
      setError("")
       const notify = () => toast("Welcome");

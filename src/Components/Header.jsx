@@ -133,12 +133,16 @@ function Header({setBoardModalOpen, boardModalOpen}) {
 
                 {/* Right Side */}
                 <div className=' flex items-center space-x-4 md:space-x-6 '>
-                    <button
-                        onClick={() => setIsTaskModalOpen((prevState) => !prevState)}
-                        className='hidden md:block button'
-                    >
-                        + Add New Task
-                    </button>
+
+                    {queryParam !== 'dashboard' &&
+                        <button
+                            onClick={() => setIsTaskModalOpen((prevState) => !prevState)}
+                            className='hidden md:block button'
+                        >
+                            + Add New Task
+                        </button>
+                    }
+
 
                     {queryParam !== 'dashboard' &&
                         <>
