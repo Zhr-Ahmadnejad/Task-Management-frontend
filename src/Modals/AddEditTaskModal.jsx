@@ -15,7 +15,8 @@ function AddEditTaskModal({
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [priority, setPriority] = useState(0);
+    const [list_selector, setList_selector] = useState([])
+    const [list_tasks, setList_tasks] = useState([])
 
 
     const [status, setStatus] = useState("");
@@ -37,9 +38,34 @@ function AddEditTaskModal({
     const user_token = Cookies.get('token');
 
 
+    useEffect(() => {
+      if (queryParam !== 'dashboard'){
+        (async ()=>{
+          try {
+            const {data} = await axios.get(`http://localhost:8088/api/user/board/tasks/boardId/${+queryParam}`, {
+              headers: {
+                Authorization: `Bearer ${user_token}`
+              }
+            })
+
+            if (data) {
+                const filteredData = data.map(task => ({
+                    id: task.id,
+                    taskName: task.taskName
+                }));
+
+                setList_selector(filteredData);
+
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        })()
+      }
+    }, []);
 
 
-
+    // console.log(data_edited.dependentTaskIds)
 
     useEffect(() => {
 
@@ -47,7 +73,14 @@ function AddEditTaskModal({
             setTitle(data_edited.taskName)
             setDescription(data_edited?.description);
             setSubtasks(data_edited?.subTasks);
-            setPriority(+data_edited.priority);
+
+            const filteredTasks = data_edited.dependentTaskIds.map(id => {
+                const task = list_selector.find(task => task.id === id);
+                return task ? { id: task.id, name: task.taskName } : null;
+            }).filter(task => task !== null);
+
+            setList_tasks(filteredTasks);
+
 
             (async () => {
                 try {
@@ -141,17 +174,19 @@ function AddEditTaskModal({
             return itm.title
         })
 
+        const dependencies = list_tasks.map(itm=> itm.id)
+
         if (type === 'edit') {
 
             try {
-
+                
                 const {data} = await axios.put(`http://localhost:8088/api/user/board/tasks/${data_edited.id}`,
                     {
                         taskName: title ? title : null,
                         description: description ? description : null,
                         taskStateId: stateId ? stateId : null,
                         subTasks: subtaskSort.length > 0 ? subtaskSort : null,
-                        priority : priority === 0 ? null : priority
+                        dependentTaskIds : dependencies
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -170,13 +205,14 @@ function AddEditTaskModal({
             if(isValid){
                 try {
 
+
                     const {data} = await axios.post("http://localhost:8088/api/user/board/tasks", {
                         taskName: title,
                         description: description,
                         taskStateId: stateId,
                         boardId: queryParam,
                         subTasks: subtaskSort,
-                        priority : priority === 0 ? null : priority
+                        dependentTaskIds : dependencies
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -195,6 +231,27 @@ function AddEditTaskModal({
         }
 
 
+    }
+
+
+    const handleSelectChange = (event) => {
+
+        if(event.target.value !== ''){
+            const findName = list_selector.find((itm)=> itm.id === +event?.target?.value)
+
+            const isAvailable = list_tasks.find(itm => itm.id === findName?.id)
+
+            if (!isAvailable){
+                console.log("isAvailable")
+                setList_tasks([...list_tasks,{id : findName.id, name : findName.taskName}])
+            }
+        }
+
+    };
+
+    const remove_task = (id)=>{
+        const removing_task = list_tasks.filter(itm=> itm.id !== id)
+        setList_tasks(removing_task)
     }
 
     return (
@@ -239,16 +296,35 @@ function AddEditTaskModal({
 
                 <div className="mt-8 flex flex-col space-y-1">
                     <label className="  text-sm dark:text-white text-gray-500">
-                        اولویت
+                        Select Task
                     </label>
-                    <input
-                        value={priority}
-                        onChange={(e) => setPriority(+e.target.value)}
-                        id="task-name-input"
-                        type="number"
-                        className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-1  ring-0  "
-                        placeholder=" e.g Take coffee break"
-                    />
+
+                    <select onChange={handleSelectChange}
+                            className={"rounded-md text-sm  border-[0.5px] border-gray-600 p-2.5"}>
+                        <option value="">انتخاب تسک</option>
+                        {list_selector.map(task => (
+                            <option key={task.id} value={task.id}>
+                                {task.taskName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="mt-8 flex flex-col space-y-1">
+                    <span className="text-sm dark:text-white text-gray-500 text-center">
+                        Select Task
+                    </span>
+
+                   <div className={"flex gap-2.5"}>
+                       {list_tasks.map((itm)=>(
+                           <span key={itm.id} className={"bg-[#416555] p-2.5 text-white rounded-lg"}>
+                            {itm.name}
+
+                               <button className={"text-xl ml-2.5"} onClick={()=> remove_task(itm.id)}>X</button>
+                        </span>
+                       ))}
+                   </div>
+
                 </div>
 
                 {/* Description */}

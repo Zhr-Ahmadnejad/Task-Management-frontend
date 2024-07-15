@@ -18,6 +18,10 @@ function ProfilePage() {
 
     const navigate = useNavigate();
 
+    const handleHomeClick = () => {
+        window.location.href = '/home';
+    };
+
     useEffect(() => {
 
 
@@ -210,6 +214,16 @@ function ProfilePage() {
                         back
                     </button>
                 }
+
+                <button
+                    className=" bg-[#416555] w-full mt-4 hover:bg-green-300 text-white font-bold py-2 px-4 rounded
+          focus:outline-none focus:shadow-outline"
+                    onClick={handleHomeClick}
+                >
+                    خانه
+                </button>
+
+
             </div>
         </div>
     );

@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import {useNavigate, useSearchParams} from "react-router-dom";
 
 
-function Column({colIndex, dataCol,column_all,setAll_task_data,all_task_data}) {
+function Column({colIndex, dataCol,column_all}) {
 
     const colors = [
         "bg-red-500",
@@ -89,53 +89,14 @@ function Column({colIndex, dataCol,column_all,setAll_task_data,all_task_data}) {
         }
     }, [queryParam, check]);
 
-    useEffect(() => {
-        if(queryParam !== 'dashboard'){
-            (async () => {
-                try {
-                    const {data} = await axios.get("http://localhost:8088/api/user/board/tasks", {
-                        headers: {
-                            'Authorization': `Bearer ${user_token}`,
-                            'taskStateId': dataCol.id,
-                            'boardId': queryParam
-                        }
-                    })
-
-                    const filteredData = data.map(item => {
-                        const { subTasks, boardId, description, taskName, ...rest } = item;
-                        return rest;
-                    });
-
-                    setAll_task_data((prev) => {
-                        const newData = filteredData.filter(item => !prev.some(prevItem => prevItem.id === item.id));
-                        return [...prev, ...newData];
-                    });
-
-                } catch (err) {
-                    console.log(err)
-                }
-            })()
-        }
-    }, [user_token, dataCol.id, queryParam]);
-
-
-
     const handleOnDrop = async (e) => {
-        const {prevColIndex, taskIndex, priority} = JSON.parse(
+        const {prevColIndex, taskIndex} = JSON.parse(
             e.dataTransfer.getData("text")
         );
 
-        // if (colIndex !== prevColIndex && dataCol.stateName !== "پایان") {
-        //     const lowerPriorityTasks = column_data.filter(
-        //         (task) => task.priority < priority
-        //     );
+        // if (colIndex !== prevColIndex) {
         //
-        //     console.log(lowerPriorityTasks)
-        //
-        //     if (lowerPriorityTasks.length > 0) {
-        //         alert("ابتدا باید taskهای با اولویت پایین‌تر تکمیل شوند.");
-        //         return;
-        //     }
+        //     return;
         // }
 
         try {
@@ -170,7 +131,7 @@ function Column({colIndex, dataCol,column_all,setAll_task_data,all_task_data}) {
         <div
             onDrop={handleOnDrop}
             onDragOver={handleOnDragOver}
-            className="scrollbar-hide mx-5 pt-[90px] min-w-[280px] "
+            className="scrollbar-hide mx-5 pt-[90px] min-w-[280px]"
         >
             <div className="font-semibold flex items-center gap-2 tracking-widest md:tracking-[.2em] text-[#828fa3]">
                 <span className={`rounded-full w-4 h-4 ${color}`}/>
@@ -178,17 +139,18 @@ function Column({colIndex, dataCol,column_all,setAll_task_data,all_task_data}) {
             </div>
 
 
-            {sortedData.map((task, index) => (
-                <Task
-                    key={index}
-                    col_data={task}
-                    taskIndex={index}
-                    colIndex={colIndex}
-                    setCheck={setCheck}
-                    allTasks={column_all}
-                    all_task_data={all_task_data}
-                />
-            ))}
+            <div className={`${queryParam === 'dashboard' && "flex gap-2.5 flex-wrap"}`}>
+                {sortedData.map((task, index) => (
+                    <Task
+                        key={index}
+                        col_data={task}
+                        taskIndex={index}
+                        colIndex={colIndex}
+                        setCheck={setCheck}
+                        allTasks={column_all}
+                    />
+                ))}
+            </div>
 
         </div>
     );
