@@ -197,7 +197,7 @@ function Task({ colIndex, taskIndex,col_data ,setCheck,allTasks}) {
                      onDragStart={handleOnDrag}
                      className={`w-[280px] first:my-5 rounded-lg bg-green-300  dark:bg-[#2b2c37] shadow-[#364e7e1a] py-6 px-3 
         shadow-lg hover:text-[#416555] dark:text-white dark:hover:text-[#416555] cursor-pointer
-        ${checkDrag.draggable ? "" : "bg-red-400"}
+        ${checkDrag.draggable ? "" : "bg-red-400 dark:bg-red-400"}
         `}
                  >
                    <p className=" font-bold tracking-wide ">{col_data.taskName}</p>
