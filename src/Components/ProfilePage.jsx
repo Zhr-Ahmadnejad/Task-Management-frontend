@@ -113,9 +113,9 @@ function ProfilePage() {
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-[#416555] dark:bg-white">
             <div className="bg-white dark:bg-[#416555] p-8 rounded-lg shadow-lg text-[#416555] dark:text-white">
-                <h2 className="text-2xl mb-4 font-semibold">Profile</h2>
+                <h2 className="text-2xl mb-4 font-semibold">اطلاعات حساب کاربری</h2>
                 <div className="mb-4">
-                    <label className="block mb-2 font-bold">First Name:</label>
+                    <label className="block mb-2 font-bold">نام </label>
                     <div className="relative">
                         <input
                             className="w-full px-3 py-2 border rounded-md focus:outline-none"
@@ -126,13 +126,13 @@ function ProfilePage() {
                         />
                         {editMode && (
                             <button className="absolute top-2 right-2" onClick={handleSave}>
-                                Save
+                                ذخیره
                             </button>
                         )}
                     </div>
                 </div>
                 <div className="mb-4">
-                    <label className="block mb-2 font-bold">Last Name:</label>
+                    <label className="block mb-2 font-bold">نام خانوادگی</label>
                     <div className="relative">
                         <input
                             className="w-full px-3 py-2 border rounded-md focus:outline-none"
@@ -144,13 +144,13 @@ function ProfilePage() {
                         />
                         {editMode && (
                             <button className="absolute top-2 right-2" onClick={handleSave}>
-                                Save
+                                ذخیره
                             </button>
                         )}
                     </div>
                 </div>
                 <div className="mb-4">
-                    <label className="block mb-2 font-bold">Email:</label>
+                    <label className="block mb-2 font-bold">ایمیل</label>
                     <div className="relative">
                         <input
                             className="w-full px-3 py-2 border rounded-md focus:outline-none"
@@ -161,13 +161,13 @@ function ProfilePage() {
                         />
                         {editMode && (
                             <button className="absolute top-2 right-2" onClick={handleSave}>
-                                Save
+                                ذخیره
                             </button>
                         )}
                     </div>
                 </div>
                 <div className="mb-4">
-                    <label className="block mb-2 font-bold">Password:</label>
+                    <label className="block mb-2 font-bold">رمز عبور</label>
                     <div className="relative">
                         <input
                             className="w-full px-3 py-2 border rounded-md focus:outline-none"
@@ -178,7 +178,7 @@ function ProfilePage() {
                         />
                         {editMode && (
                             <button className="absolute top-2 right-2" onClick={handleSave}>
-                                Save
+                                ذخیره
                             </button>
                         )}
                     </div>
@@ -190,7 +190,7 @@ function ProfilePage() {
                         type="submit"
                         onClick={handleEdit}
                     >
-                        Edit
+                        ویرایش
                     </button>
                 )}
 
@@ -201,7 +201,7 @@ function ProfilePage() {
                         className=" bg-red-500 mt-4 w-full hover:bg-red-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         onClick={delete_user}
                     >
-                        Delete
+                        حذف حساب کاربری
                     </button>
                 )}
 

@@ -169,7 +169,7 @@ function TaskModal({taskIndex, colIndex, setIsTaskModalOpen, task_data, setCheck
                 </p>
 
                 <p className=" pt-6 tracking-widest text-sm ">
-                    Subtasks ({check_completed} of {task_data?.subTasks.length})
+                    وظایف فرعی ({check_completed} of {task_data?.subTasks.length})
                 </p>
 
                 {/* subtasks section */}

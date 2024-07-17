@@ -76,7 +76,7 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
     const validate = () => {
 
         if (!name.trim()) {
-            const notify = () => toast.error("empty field name");
+            const notify = () => toast.error("قسمت نام خالیه");
             notify()
 
             return false;
@@ -85,7 +85,7 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
 
         for (let i = 0; i < newColumns.length; i++) {
             if (!newColumns[i].name.trim()) {
-                const notify = () => toast.error("empty field board column");
+                const notify = () => toast.error("اسم ستون خالیه");
                 notify()
                 return false;
             }
@@ -116,14 +116,14 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                     })
 
                     if (first_add) {
-                        const notify = () => toast.success("board saved.");
+                        const notify = () => toast.success("برد ذخیره شد");
                         notify()
 
                         console.log(data)
                         navigate(0)
                     } else {
 
-                        const notify = () => toast.success("board saved.");
+                        const notify = () => toast.success("برد ذخیره شد");
                         notify()
 
                         setBoardModalOpen(false);
@@ -196,17 +196,17 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                 </button>
 
                 <h3 className='text-lg'>
-                    {type === 'edit' ? 'Edit' : 'Add New'} Board
+                    {type === 'edit' ? 'ویرایش' : 'ساخت'} برد
                 </h3>
 
                 {type !== 'edit-2' &&
                     <div className="mt-8 flex flex-col space-y-1">
                         <label className='text-sm dark:text-white text-gray-500'>
-                            Board Name
+                            اسم برد
                         </label>
                         <input
                             className='bg-transparent px-4 py-2 rounded-md text-sm border border-gray-600 outline-none focus:outline-[#416555] outline-1 right-0'
-                            placeholder='e.g Web Design'
+                            placeholder='به طور مثال : تکالیف دانشگاه'
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             id='board-name-input'
@@ -217,7 +217,7 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                 <div className=' mt-8 flex flex-col space-y-3'>
                     <label
                         className='text-sm dark:text-white text-gray-500'
-                    > Board Columns
+                    > ستونهای برد
                     </label>
                     {
                         newColumns.map((column, index) => (
@@ -249,14 +249,14 @@ function AddEditBoardModal({setBoardModalOpen, type, setCheck}) {
                         className='w-full items-center hover:opacity-75 dark:text-[#416555] dark:bg-white text-white bg-[#416555] py-2 mt-2 rounded-full'
                         onClick={addNewColumnBetween}
                     >
-                        + Add new column
+                        + اضافه کردن ستون جدید
                     </button>
 
                     <button
                         className='w-full items-center hover:opacity-75 dark:text-white dark:bg-[#416555] text-white bg-[#416555] py-2 mt-8 rounded-full'
                         onClick={onSubmit}
                     >
-                        {type === 'add' ? 'Create New Board' : 'Save Changes'}
+                        {type === 'add' ? 'ساخت برد جدید' : 'ذخیره ی تغییرات'}
                     </button>
                 </div>
 

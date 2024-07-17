@@ -139,7 +139,7 @@ function Header({setBoardModalOpen, boardModalOpen}) {
                             onClick={() => setIsTaskModalOpen((prevState) => !prevState)}
                             className='hidden md:block button'
                         >
-                            + Add New Task
+                            + ساختن وظیفه ی جدید
                         </button>
                     }
 

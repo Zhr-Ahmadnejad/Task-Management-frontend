@@ -18,17 +18,15 @@ function DeleteModal({ type, title, onDeleteBtnClick, toggleDeleteModal }) {
 
       <div className=" scrollbar-hide overflow-y-scroll max-h-[95vh]  my-auto  bg-white dark:bg-[#2b2c37] text-black dark:text-white font-bold shadow-md shadow-[#364e7e1a] max-w-md mx-auto  w-full px-8  py-8 rounded-xl ">
         <h3 className=" font-bold text-red-500 text-xl  ">
-          Delete this {type}?
+          میخای پاکش کنی؟
         </h3>
         {type === "task" ? (
           <p className="text-gray-500 font-[600] tracking-wide text-xs pt-6">
-            Are you sure you want to delete the "{title}" task and its subtasks?
-            This action cannot be reversed.
+            واقعا میخای این وظیفه و زیر وظیفه هارو پاک کنی؟ یادت باشه اگه پاکشون کنی دیگه قابل برگشت نیستنهاااا
           </p>
         ) : (
           <p className="text-gray-500 font-[600] tracking-wide text-xs pt-6">
-            Are you sure you want to delete the "{title}" board? This action
-            will remove all columns and tasks and cannot be reversed.
+            واقعا میخای این برد رو پاک کنی؟ یادت باشخ اگه پاک کنی تمام ستون ها و وظایف پاک میشن و قابل بازگشت نیست هااا
           </p>
         )}
 
@@ -37,13 +35,13 @@ function DeleteModal({ type, title, onDeleteBtnClick, toggleDeleteModal }) {
             onClick={onDeleteBtnClick}
             className="w-full items-center text-white hover:opacity-75 bg-red-500 py-2 rounded-full"
           >
-            Delete
+            پاک کردن
           </button>
           <button
             onClick={toggleDeleteModal}
             className="w-full items-center text-[#416555] dark:bg-white hover:opacity-75 bg-[#635fc71a]  py-2 rounded-full"
           >
-            Cancel
+            لغو
           </button>
         </div>
       </div>

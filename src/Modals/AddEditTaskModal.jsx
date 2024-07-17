@@ -275,14 +275,14 @@ function AddEditTaskModal({
                 </button>
 
                 <h3 className=" text-lg ">
-                    {type === "edit" ? "Edit" : "Add New"} Task
+                    {type === "edit" ? "ویرایش" : "ساخت"} وظیفه
                 </h3>
 
                 {/* Task Name */}
 
                 <div className="mt-8 flex flex-col space-y-1">
                     <label className="  text-sm dark:text-white text-gray-500">
-                        Task Name
+                        نام تسک
                     </label>
                     <input
                         value={title}
@@ -290,18 +290,18 @@ function AddEditTaskModal({
                         id="task-name-input"
                         type="text"
                         className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-1  ring-0  "
-                        placeholder=" e.g Take coffee break"
+                        placeholder=" به طور مثال : ارسال ایمیل به استاد"
                     />
                 </div>
 
                 <div className="mt-8 flex flex-col space-y-1">
                     <label className="  text-sm dark:text-white text-gray-500">
-                        Select Task
+                        انتخاب تسک های وابسته
                     </label>
 
                     <select onChange={handleSelectChange}
                             className={"rounded-md text-sm  border-[0.5px] border-gray-600 p-2.5"}>
-                        <option value="">انتخاب تسک</option>
+                        <option value="">به طور مثال : این تسک به تسک انجام پروژه وابسته است</option>
                         {list_selector.map(task => (
                             <option key={task.id} value={task.id}>
                                 {task.taskName}
@@ -312,7 +312,7 @@ function AddEditTaskModal({
 
                 <div className="mt-8 flex flex-col space-y-1">
                     <span className="text-sm dark:text-white text-gray-500 text-center">
-                        Select Task
+                        تسکهای وابسته
                     </span>
 
                    <div className={"flex gap-2.5"}>
@@ -330,16 +330,14 @@ function AddEditTaskModal({
                 {/* Description */}
                 <div className="mt-8 flex flex-col space-y-1">
                     <label className="  text-sm dark:text-white text-gray-500">
-                        Description
+                        توضیحات
                     </label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         id="task-description-input"
                         className=" bg-transparent outline-none min-h-[200px] focus:border-0 px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-[1px] "
-                        placeholder="e.g. It's always good to take a break. This
-            15 minute break will  recharge the batteries
-            a little."
+                        placeholder="به طور مثال : ارسال ایمیل برای تمرین پایانی"
                     />
                 </div>
 
@@ -347,7 +345,7 @@ function AddEditTaskModal({
 
                 <div className="mt-8 flex flex-col space-y-3">
                     <label className="  text-sm dark:text-white text-gray-500">
-                        Subtasks
+                        تسکهای فرعی
                     </label>
 
                     {subtasks.map((subtask, index) => (
@@ -359,7 +357,7 @@ function AddEditTaskModal({
                                 type="text"
                                 value={subtask.title}
                                 className=" bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#416555] outline-[1px]  "
-                                placeholder=" e.g Take coffee break"
+                                placeholder="  مثال : پیدا کردن ایمیل استاد یا نگارش متن ایمیل "
                             />
                             <img
                                 src={crossIcon}
@@ -380,7 +378,7 @@ function AddEditTaskModal({
                             ]);
                         }}
                     >
-                        + Add New Subtask
+                        + اضافه کردن تسک فرعی جدید
                     </button>
                 </div>
 
@@ -389,7 +387,7 @@ function AddEditTaskModal({
 
                 <div className="mt-8 flex flex-col space-y-3">
                     <label className="  text-sm dark:text-white text-gray-500">
-                        Current Status
+                        وضعیت فعلی
                     </label>
                     <select
                         value={status}
@@ -409,7 +407,7 @@ function AddEditTaskModal({
                         onClick={create_task_handler}
                         className=" w-full items-center text-white bg-[#416555] py-2 rounded-full "
                     >
-                        {type === "edit" ? " save edit" : "Create task"}
+                        {type === "edit" ? " ذخیره ی تغییرات" : "ساخت وظیفه ی جدید"}
                     </button>
 
                 </div>

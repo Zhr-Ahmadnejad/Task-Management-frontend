@@ -11,9 +11,9 @@ function AboutUs() {
       <div className="bg-white dark:bg-[#416555] p-8 rounded-lg shadow-md flex flex-col items-center justify-center">
         <img src={logo} alt="Logo" className="w-30 h-40 " />
         <div className="text-left mb-8">
-          <h2 className="text-xl font-bold text-[#416555] dark:text-white">About Our Team</h2>
+          <h2 className="text-xl font-bold text-[#416555] dark:text-white">درباره ی تیم ما</h2>
           <p className="text-[#416555] dark:text-white mt-4">
-          My name is Zahra Ahmadnejad and this is the final project of my bachelor's degree.
+            سلام. من زهرا احمدنژاد هستم و این پروژه ی کارشناسی بنده هست
           </p>
         </div>
         <button

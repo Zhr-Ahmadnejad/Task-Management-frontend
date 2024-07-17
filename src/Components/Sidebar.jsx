@@ -82,7 +82,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                         isSideBarOpen && (
                             <div className='w-full rounded-xl bg-[#416555] dark:bg-[#2b2c37]'>
                                 <h3 className=' dark:text-gray-300 text-gray-300 font-semibold mx-4 mb-8'>
-                                    ALL BOARDS({boards_length})
+                                    تمام بردها({boards_length})
                                 </h3>
                                 <div className='flex flex-col h-[60vh] justify-between'>
                                     <div>
@@ -111,7 +111,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                                         >
                                             <img src={boardIcon} className=' h-4' alt={"board icon"}/>
                                             <p className=' text-lg font-bold'>
-                                                Create New Board
+                                                ساخت برد جدید
                                             </p>
                                         </div>
 
@@ -122,7 +122,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                                         >
                                             <img src={boardIcon} className=' h-4' alt={"board icon"}/>
                                             <p className=' text-lg font-bold'>
-                                                Dashboard
+                                                داشبورد
                                             </p>
                                         </div>
 
@@ -137,7 +137,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                                         >
                                             <img src={aboutUsIcon} alt='signout' className='h-4'/>
                                             <p className=' text-lg font-bold'>
-                                                About Us
+                                                درباره ی ما
                                             </p>
                                         </div>
 
@@ -151,7 +151,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                     text-green-300 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
                                             <img src={aboutUsIcon} alt='signout' className='h-4'/>
                                             <p className=' text-lg font-bold'>
-                                                Setting
+                                                تنظیمات
                                             </p>
                                         </div>
 
@@ -162,7 +162,7 @@ function Sidebar({isSideBarOpen, setIsSideBarOpen}) {
                      text-red-700 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
                                             <img src={SignoutIcon} alt='signout' className='h-4'/>
                                             <p className=' text-lg font-bold'>
-                                                Sign Out
+                                                خروج
                                             </p>
                                         </div>
                                     </div>

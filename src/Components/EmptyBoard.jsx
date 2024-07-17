@@ -51,8 +51,8 @@ function EmptyBoard({ type ,check, setCheck}) {
     <div className=" bg-white dark:bg-[#2b2c37] h-screen w-screen flex flex-col  items-center justify-center">
       <h3 className=" text-gray-500 font-bold">
         {type === "edit"
-          ? "This board is empty. Create a new column to get started."
-          : "There are no boards available. Create a new board to get started"}
+          ? "این برد خالیه . ستون جدید بساز تا باهم شروع کنیم"
+          : "هیچ بردی وجود نداره . قدم اول اینه که تو برد مخصوص خودتو بسازی"}
       </h3>
       <button
         onClick={() => {

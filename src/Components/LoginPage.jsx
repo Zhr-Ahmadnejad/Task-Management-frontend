@@ -47,28 +47,28 @@ function LoginPage() {
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <div className="mb-4">
               <label className="block text-[#416555] text-sm font-bold mb-2" htmlFor="email">
-                Email
+                ایمیل
               </label>
               <input
                 className="w-full bg-transparent flex-grow px-4 py-2 rounded-md text-sm
                 border border-gray-600 outline-none focus:outline-[#416555]"
                 id="email"
                 type="email"
-                placeholder="Enter your email address"
+                placeholder="ایمیل خود را وارد کنید"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="mb-6">
               <label className="block text-[#416555] text-sm font-bold mb-2" htmlFor="password">
-                Password
+                رمز عبور
               </label>
               <input
                 className="w-full bg-transparent flex-grow px-4 py-2 rounded-md text-sm
                 border border-gray-600 outline-none focus:outline-[#416555]"
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="رمز عبور خود را وارد کنید"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -79,10 +79,10 @@ function LoginPage() {
                 focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Login
+                ورود
               </button>
               <Link to="/signup" className="text-[#416555] text-sm font-bold">
-                Don't have an account? Signup
+                حساب کاربری نداری؟ثبتنام کن
               </Link>
             </div>
           </form>

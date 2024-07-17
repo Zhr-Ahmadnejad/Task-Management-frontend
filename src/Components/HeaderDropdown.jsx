@@ -93,7 +93,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
 
             <div className='bg-white dark:bg-[#2b2c37] shadow-md shadow-[#364e7e1a] w-full py-4 rounded-xl'>
                 <h3 className=' dark:text-gray-300 text-gray-600 font-semibold mx-4 mb-8'>
-                    All boards ({boards ? boards.length : 0})
+                    تمام بردها ({boards ? boards.length : 0})
                 </h3>
 
                 <div>
@@ -119,7 +119,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                     >
                         <img src={boardIcon} className='h-4 '/>
                         <p className='text-lg font-bold'>
-                            Create New Board
+                            ساختن برد جدید
                         </p>
                     </div>
 
@@ -128,7 +128,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                     >
                         <img src={boardIcon} className='h-4 '/>
                         <p className='text-lg font-bold'>
-                            Dashboard
+                            داشبورد
                         </p>
                     </div>
                     {/* About us Button  */}
@@ -141,7 +141,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                     text-[#416555] px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
                         <img src={aboutUsIcon} alt='signout' className='h-4'/>
                         <p className=' text-lg font-bold'>
-                            About Us
+                            درباره ی ما
                         </p>
                     </div>
                     <div
@@ -152,7 +152,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                     text-[#416555] px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
                         <img src={aboutUsIcon} alt='signout' className='h-4'/>
                         <p className=' text-lg font-bold'>
-                            setting
+                            تنظیمات
                         </p>
                     </div>
                     <div
@@ -161,7 +161,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                      text-red-700 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
                         <img src={SignoutIcon} alt='signout' className='h-4'/>
                         <p className=' text-lg font-bold'>
-                            Sign Out
+                            خروج
                         </p>
                     </div>
 
