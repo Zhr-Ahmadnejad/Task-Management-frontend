@@ -7,120 +7,113 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import Cookies from "js-cookie";
 
 function AddEditTaskModal({
-                              type,
-                              device,
-                              setIsAddTaskModalOpen,
-                              data_edited
-                          }) {
+    type,  // نوع عملیات: "edit" برای ویرایش و "add" برای ایجاد تسک جدید
+    device,  // نوع دستگاه برای تعیین کلاس CSS مناسب (موبایل یا دسکتاپ)
+    setIsAddTaskModalOpen,  // تابعی برای باز و بسته کردن مودال
+    data_edited  // داده‌های تسک برای حالت ویرایش
+}) {
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [list_selector, setList_selector] = useState([])
-    const [list_tasks, setList_tasks] = useState([])
-
-
-    const [status, setStatus] = useState("");
-
-
-    const [subtasks, setSubtasks] = useState([
-        {title: "", isCompleted: false, id: uuidv4()},
-        {title: "", isCompleted: false, id: uuidv4()},
+    // وضعیت‌های مختلف برای نگهداری داده‌های فرم
+    const [title, setTitle] = useState("");  // عنوان تسک
+    const [description, setDescription] = useState("");  // توضیحات تسک
+    const [list_selector, setList_selector] = useState([]);  // لیست تسک‌های وابسته برای انتخاب
+    const [list_tasks, setList_tasks] = useState([]);  // لیست تسک‌های وابسته انتخاب‌شده
+    const [status, setStatus] = useState("");  // وضعیت فعلی تسک
+    const [subtasks, setSubtasks] = useState([  // تسک‌های فرعی با مقدار اولیه
+        { title: "", isCompleted: false, id: uuidv4() },
+        { title: "", isCompleted: false, id: uuidv4() },
     ]);
+    const [taskState, setTaskState] = useState([]);  // لیست وضعیت‌های تسک
+    const [stateId, setStateId] = useState("");  // شناسه وضعیت فعلی
 
-    const [taskState, setTaskState] = useState([]);
-    const [stateId, setStateId] = useState("");
-
+    // دریافت پارامترهای جست‌وجو از URL
     let [searchParams] = useSearchParams();
-    let queryParam = searchParams.get("");
+    let queryParam = searchParams.get("");  // پارامتر جست‌وجو برای شناسه برد
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();  // تابعی برای ناوبری در برنامه
+    const user_token = Cookies.get('token');  // توکن کاربر از کوکی‌ها برای احراز هویت
 
-    const user_token = Cookies.get('token');
-
-
+    // بارگذاری داده‌های مربوط به تسک‌های وابسته و وضعیت‌های تسک هنگام بارگذاری کامپوننت
     useEffect(() => {
-      if (queryParam !== 'dashboard'){
-        (async ()=>{
-          try {
-            const {data} = await axios.get(`http://localhost:8088/api/user/board/tasks/boardId/${+queryParam}`, {
-              headers: {
-                Authorization: `Bearer ${user_token}`
-              }
-            })
+        if (queryParam !== 'dashboard') {
+            (async () => {
+                try {
+                    // درخواست برای دریافت تسک‌های وابسته
+                    const { data } = await axios.get(`http://localhost:8088/api/user/board/tasks/boardId/${+queryParam}`, {
+                        headers: {
+                            Authorization: `Bearer ${user_token}`
+                        }
+                    });
 
-            if (data) {
-                const filteredData = data.map(task => ({
-                    id: task.id,
-                    taskName: task.taskName
-                }));
+                    if (data) {
+                        const filteredData = data.map(task => ({
+                            id: task.id,
+                            taskName: task.taskName
+                        }));
+                        setList_selector(filteredData);  // ذخیره تسک‌های وابسته در وضعیت
+                    }
+                } catch (err) {
+                    console.log(err);  // لاگ خطا در صورت بروز مشکل
+                }
+            })();
+        }
+    }, []);  // وابستگی‌های خالی برای اجرای فقط در بارگذاری اولیه
 
-                setList_selector(filteredData);
-
-            }
-          } catch (err) {
-            console.log(err);
-          }
-        })()
-      }
-    }, []);
-
-
-    // console.log(data_edited.dependentTaskIds)
-
+    // بارگذاری داده‌های تسک و وضعیت‌ها هنگام ورود به حالت ویرایش یا ایجاد جدید
     useEffect(() => {
-
         if (type === "edit") {
-            setTitle(data_edited.taskName)
-            setDescription(data_edited?.description);
-            setSubtasks(data_edited?.subTasks);
+            setTitle(data_edited.taskName);  // تنظیم عنوان تسک
+            setDescription(data_edited?.description);  // تنظیم توضیحات تسک
+            setSubtasks(data_edited?.subTasks);  // تنظیم تسک‌های فرعی
 
+            // تنظیم تسک‌های وابسته با استفاده از داده‌های ویرایش شده
             const filteredTasks = data_edited.dependentTaskIds.map(id => {
                 const task = list_selector.find(task => task.id === id);
                 return task ? { id: task.id, name: task.taskName } : null;
             }).filter(task => task !== null);
 
-            setList_tasks(filteredTasks);
-
+            setList_tasks(filteredTasks);  // ذخیره تسک‌های وابسته انتخاب‌شده
 
             (async () => {
                 try {
-                    const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
+                    // دریافت وضعیت‌های تسک برای حالت ویرایش
+                    const { data } = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
                         }
-                    })
+                    });
 
                     if (data) {
-                        setTaskState(data.taskStates)
-                        setStateId(data.taskStates[0].id)
+                        setTaskState(data.taskStates);  // ذخیره وضعیت‌های تسک
+                        setStateId(data.taskStates[0].id);  // تنظیم وضعیت اولیه
                     }
                 } catch (err) {
-                    console.log(err);
+                    console.log(err);  // لاگ خطا در صورت بروز مشکل
                 }
-            })()
+            })();
 
         } else {
-
             (async () => {
                 try {
-                    const {data} = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
+                    // دریافت وضعیت‌های تسک برای حالت ایجاد جدید
+                    const { data } = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
                         }
-                    })
+                    });
 
                     if (data) {
-                        setTaskState(data.taskStates)
-                        setStateId(data.taskStates[0].id)
+                        setTaskState(data.taskStates);  // ذخیره وضعیت‌های تسک
+                        setStateId(data.taskStates[0].id);  // تنظیم وضعیت اولیه
                     }
                 } catch (err) {
-                    console.log(err);
+                    console.log(err);  // لاگ خطا در صورت بروز مشکل
                 }
-            })()
-
+            })();
         }
-    }, []);
+    }, []);  // وابستگی‌های خالی برای اجرای فقط در بارگذاری اولیه
 
+    // به‌روزرسانی عنوان تسک‌های فرعی
     const onChangeSubtasks = (id, newValue) => {
         setSubtasks((prevState) => {
             const newState = [...prevState];
@@ -130,17 +123,16 @@ function AddEditTaskModal({
         });
     };
 
+    // به‌روزرسانی وضعیت فعلی تسک و تنظیم شناسه وضعیت
     const onChangeStatus = (e) => {
         setStatus(e.target.value);
 
-        const find_id = taskState.find((itm) => itm.stateName === e.target.value)
-
-        setStateId(find_id.id)
-
+        const find_id = taskState.find((itm) => itm.stateName === e.target.value);
+        setStateId(find_id.id);
     };
 
+    // اعتبارسنجی فرم برای اطمینان از پر بودن فیلدها
     const validate = () => {
-
         if (!title.trim()) {
             return false;
         }
@@ -149,110 +141,96 @@ function AddEditTaskModal({
                 return false;
             }
         }
-
         return true;
     };
 
-
+    // حذف یک تسک فرعی بر اساس شناسه
     const onDelete = (id) => {
         setSubtasks((prevState) => prevState.filter((el) => el.id !== id));
     };
 
+    // بستن مودال در صورت کلیک در خارج از محتوای مودال
     const closeHandler = (e) => {
         if (e.target !== e.currentTarget) {
             return;
         }
         setIsAddTaskModalOpen(false);
-    }
+    };
 
-
+    // ایجاد یا ویرایش تسک بر اساس نوع عملیات
     const create_task_handler = async () => {
+        const isValid = validate();  // اعتبارسنجی فرم
 
-        const isValid = validate();
-
-        const subtaskSort = subtasks.map((itm) => {
-            return itm.title
-        })
-
-        const dependencies = list_tasks.map(itm=> itm.id)
+        const subtaskSort = subtasks.map((itm) => itm.title);  // استخراج عنوان تسک‌های فرعی
+        const dependencies = list_tasks.map(itm => itm.id);  // استخراج شناسه‌های تسک‌های وابسته
 
         if (type === 'edit') {
-
             try {
-                
-                const {data} = await axios.put(`http://localhost:8088/api/user/board/tasks/${data_edited.id}`,
-                    {
-                        taskName: title ? title : null,
-                        description: description ? description : null,
-                        taskStateId: stateId ? stateId : null,
-                        subTasks: subtaskSort.length > 0 ? subtaskSort : null,
-                        dependentTaskIds : dependencies
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${user_token}`
-                        }
-                    })
+                // ارسال درخواست PUT برای ویرایش تسک
+                const { data } = await axios.put(`http://localhost:8088/api/user/board/tasks/${data_edited.id}`, {
+                    taskName: title ? title : null,
+                    description: description ? description : null,
+                    taskStateId: stateId ? stateId : null,
+                    subTasks: subtaskSort.length > 0 ? subtaskSort : null,
+                    dependentTaskIds: dependencies
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${user_token}`
+                    }
+                });
 
                 if (data) {
-                    setIsAddTaskModalOpen(false)
-                    navigate(0)
+                    setIsAddTaskModalOpen(false);
+                    navigate(0);  // به‌روزرسانی صفحه
                 }
-
             } catch (err) {
-                console.log(err)
+                console.log(err);  // لاگ خطا در صورت بروز مشکل
             }
         } else {
-            if(isValid){
+            if (isValid) {
                 try {
-
-
-                    const {data} = await axios.post("http://localhost:8088/api/user/board/tasks", {
+                    // ارسال درخواست POST برای ایجاد تسک جدید
+                    const { data } = await axios.post("http://localhost:8088/api/user/board/tasks", {
                         taskName: title,
                         description: description,
                         taskStateId: stateId,
                         boardId: queryParam,
                         subTasks: subtaskSort,
-                        dependentTaskIds : dependencies
+                        dependentTaskIds: dependencies
                     }, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
                         }
-                    })
+                    });
 
                     if (data) {
-                        setIsAddTaskModalOpen(false)
-                        navigate(0)
+                        setIsAddTaskModalOpen(false);
+                        navigate(0);  // به‌روزرسانی صفحه
                     }
-
                 } catch (err) {
-                    console.log(err)
+                    console.log(err);  // لاگ خطا در صورت بروز مشکل
                 }
             }
         }
-
-
-    }
-
-
-    const handleSelectChange = (event) => {
-
-        if(event.target.value !== ''){
-            const findName = list_selector.find((itm)=> itm.id === +event?.target?.value)
-
-            const isAvailable = list_tasks.find(itm => itm.id === findName?.id)
-
-            if (!isAvailable){
-                console.log("isAvailable")
-                setList_tasks([...list_tasks,{id : findName.id, name : findName.taskName}])
-            }
-        }
-
     };
 
-    const remove_task = (id)=>{
-        const removing_task = list_tasks.filter(itm=> itm.id !== id)
-        setList_tasks(removing_task)
-    }
+    // به‌روزرسانی لیست تسک‌های وابسته بر اساس انتخاب
+    const handleSelectChange = (event) => {
+        if (event.target.value !== '') {
+            const findName = list_selector.find((itm) => itm.id === +event?.target?.value);
+            const isAvailable = list_tasks.find(itm => itm.id === findName?.id);
+
+            if (!isAvailable) {
+                setList_tasks([...list_tasks, { id: findName.id, name: findName.taskName }]);
+            }
+        }
+    };
+
+    // حذف یک تسک وابسته بر اساس شناسه
+    const remove_task = (id) => {
+        const removing_task = list_tasks.filter(itm => itm.id !== id);
+        setList_tasks(removing_task);
+    };
 
     return (
         <div
@@ -316,11 +294,11 @@ function AddEditTaskModal({
                     </span>
 
                    <div className={"flex gap-2.5"}>
-                       {list_tasks.map((itm)=>(
+                       {list_tasks.map((itm) => (
                            <span key={itm.id} className={"bg-[#416555] p-2.5 text-white rounded-lg"}>
                             {itm.name}
 
-                               <button className={"text-xl ml-2.5"} onClick={()=> remove_task(itm.id)}>X</button>
+                               <button className={"text-xl ml-2.5"} onClick={() => remove_task(itm.id)}>X</button>
                         </span>
                        ))}
                    </div>
@@ -374,7 +352,7 @@ function AddEditTaskModal({
                         onClick={() => {
                             setSubtasks((state) => [
                                 ...state,
-                                {title: "", isCompleted: false, id: uuidv4()},
+                                { title: "", isCompleted: false, id: uuidv4() },
                             ]);
                         }}
                     >
@@ -382,8 +360,7 @@ function AddEditTaskModal({
                     </button>
                 </div>
 
-                {/* current Status  */}
-
+                {/* Current Status  */}
 
                 <div className="mt-8 flex flex-col space-y-3">
                     <label className="  text-sm dark:text-white text-gray-500">
@@ -399,9 +376,7 @@ function AddEditTaskModal({
                         ))}
                     </select>
 
-
-                    {/* create "create task button" */}
-
+                    {/* Create "create task button" */}
 
                     <button
                         onClick={create_task_handler}

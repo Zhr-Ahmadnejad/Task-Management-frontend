@@ -6,53 +6,49 @@ import {toast} from "react-toastify";
 
 
 function ProfilePage() {
-    const [editMode, setEditMode] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [userId, setUserId] = useState("");
-    const [check, setCheck] = useState(1);
+    const [editMode, setEditMode] = useState(false); // وضعیت ویرایش را مدیریت می‌کند
+    const [firstName, setFirstName] = useState(''); // نام کاربر را در وضعیت نگه می‌دارد
+    const [lastName, setLastName] = useState(''); // نام خانوادگی کاربر را در وضعیت نگه می‌دارد
+    const [email, setEmail] = useState(''); // ایمیل کاربر را در وضعیت نگه می‌دارد
+    const [password, setPassword] = useState(''); // رمز عبور کاربر را در وضعیت نگه می‌دارد
+    const [userId, setUserId] = useState(""); // شناسه کاربر را در وضعیت نگه می‌دارد
+    const [check, setCheck] = useState(1); // برای ارسال پرس و جو به سرور در useEffect استفاده می‌شود
 
-    const user_token = Cookies.get('token');
+    const user_token = Cookies.get('token'); // دریافت توکن کاربر از کوکی‌ها
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // استفاده از useNavigate برای انتقال به صفحات مختلف در React Router
 
     const handleHomeClick = () => {
-        window.location.href = '/home';
+        window.location.href = '/home'; // انتقال کاربر به صفحه خانه
     };
 
     useEffect(() => {
-
-
         if (user_token) {
-
             try {
                 (async () => {
                     const {data} = await axios.get('http://localhost:8088/api/user/33', {
                         headers: {
                             Authorization: `Bearer ${user_token}`
                         }
-                    })
+                    });
 
-                    setUserId(data.id)
-
+                    // تنظیم مقادیر دریافتی از سرور برای نمایش در فرم ویرایش
+                    setUserId(data.id);
                     setFirstName(data.firstName);
                     setLastName(data.lastName);
                     setEmail(data.email);
                     setPassword(data.password);
 
-                })()
+                })();
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
-
         }
-    }, [check]);
+    }, [check]); // استفاده از useEffect برای دریافت اطلاعات از سرور و تغییر وضعیت check
 
     const handleEdit = () => {
-        setEditMode(true);
-
+        setEditMode(true); // فعال کردن حالت ویرایش
+        // پاک کردن فیلدهای فرم برای شروع ویرایش جدید
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -60,12 +56,11 @@ function ProfilePage() {
     };
 
     const back_handler = () => {
-        setEditMode(false);
-        setCheck(check + 1);
-    }
+        setEditMode(false); // خاموش کردن حالت ویرایش
+        setCheck(check + 1); // افزایش check برای ارسال پرس و جو به سرور
+    };
 
     const handleSave = async () => {
-
         try {
             const {data} = await axios.put('http://localhost:8088/api/user', {
                 firstName: firstName.length > 0 ? firstName : null,
@@ -76,39 +71,36 @@ function ProfilePage() {
                 headers: {
                     Authorization: `Bearer ${user_token}`
                 }
-            })
+            });
 
             if(data){
+                // نمایش پیام موفقیت آمیز برای ویرایش کاربر
                 const notify = () => toast.success("user edited.");
-                notify()
+                notify();
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-
     };
 
     const delete_user = async () => {
-
-
         try {
             const {data} = await axios.delete(`http://localhost:8088/api/user/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${user_token}`
                 }
-            })
+            });
 
             if (data) {
-                Cookies.remove('token')
+                Cookies.remove('token'); // حذف توکن از کوکی‌ها در صورت حذف کاربر
                 navigate("/signup", {
                     replace: true
-                })
+                }); // انتقال کاربر به صفحه ثبت نام
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-    }
-
+    };
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-[#416555] dark:bg-white">
@@ -211,7 +203,7 @@ function ProfilePage() {
           focus:outline-none focus:shadow-outline"
                         onClick={back_handler}
                     >
-                        back
+                        برگشت
                     </button>
                 }
 
@@ -222,8 +214,6 @@ function ProfilePage() {
                 >
                     خانه
                 </button>
-
-
             </div>
         </div>
     );

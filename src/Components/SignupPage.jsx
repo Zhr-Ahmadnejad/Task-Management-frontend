@@ -3,32 +3,35 @@ import {Link, useNavigate} from 'react-router-dom';
 import logo from '../Assets/logo-color.png';
 import axios from "axios";
 import Cookies from "js-cookie";
-import {toast} from "react-toastify"; // مسیر لوگو
+import {toast} from "react-toastify"; 
 
 function SignupPage() {
+  // استفاده از useState برای نگهداری وضعیت ایمیل، رمز عبور، نام و نام خانوادگی
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); // استفاده از useState برای نگهداری وضعیت خطا
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // استفاده از useNavigate برای انتقال به صفحات دیگر در React Router
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // جلوگیری از رفتن به صفحه جدید پس از submit فرم
+
     try {
-      const {data} = await axios.post('http://localhost:8088/api/register',{
+      // ارسال درخواست POST به سرور برای ثبت‌نام
+      const {data} = await axios.post('http://localhost:8088/api/register', {
         email, password, firstName, lastName
-      })
+      });
 
-      Cookies.set('token', data, { expires: 7 })
-      navigate("/home");
+      Cookies.set('token', data, { expires: 7 }); // ذخیره توکن در کوکی با انقضای 7 روز
+      navigate("/home"); // انتقال کاربر به صفحه خانه پس از ثبت‌نام موفق
 
-      setError("")
-      const notify = () => toast("Welcome");
-      notify()
+      setError(""); // حذف خطاها پس از ثبت‌نام موفق
+      const notify = () => toast("خوش اومدید"); // نمایش پیام خوش‌آمدگویی به کاربر با استفاده از toast
+      notify();
     } catch (error) {
-      setError(error.response.data);
+      setError(error.response.data); // نمایش خطاهای دریافتی از سرور به کاربر
     }
   };
 
@@ -36,12 +39,12 @@ function SignupPage() {
     <div className="h-screen flex justify-center items-center bg-[#416555]">
       <div className="grid grid-cols-2 gap-4 bg-white shadow-md rounded px-8 py-8">
         <div className="col-span-1 flex justify-center items-center">
-          <img src={logo} alt="لوگو" className="h-24" />
+          <img src={logo} alt="لوگو" className="h-24" /> {/* نمایش لوگو در سمت چپ فرم */}
         </div>
         <div className="col-span-1">
           <form onSubmit={handleSubmit}>
-            <h2 className="text-2xl mb-4 text-center text-[#416555] font-semibold">Signup</h2>
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            <h2 className="text-2xl mb-4 text-center text-[#416555] font-semibold">ثبتنام</h2> {/* عنوان فرم ثبت‌نام */}
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>} {/* نمایش خطاها اگر وجود داشته باشند */}
             <div className="mb-4">
               <label className="block text-[#416555] text-sm font-bold mb-2 " htmlFor="email">
                 ایمیل
@@ -52,7 +55,7 @@ function SignupPage() {
                 type="email"
                 placeholder="آدرس ایمیل خود را وارد کنید"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)} // بروزرسانی وضعیت ایمیل با ورود داده جدید
               />
             </div>
             <div className="mb-6">
@@ -60,12 +63,12 @@ function SignupPage() {
                 رمز عبور
               </label>
               <input
-                className=" w-full bg-transparent flex-grow px-4 py-2 rounded-md text-sm border border-gray-600 outline-none focus:outline-[#416555]"
+                className="w-full bg-transparent flex-grow px-4 py-2 rounded-md text-sm border border-gray-600 outline-none focus:outline-[#416555]"
                 id="password"
                 type="password"
                 placeholder="رمز عبور خود را وارد کنید"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)} // بروزرسانی وضعیت رمز عبور با ورود داده جدید
               />
             </div>
             <div className="mb-4">
@@ -78,7 +81,7 @@ function SignupPage() {
                 type="text"
                 placeholder="نام خود را وارد کنید"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => setFirstName(e.target.value)} // بروزرسانی وضعیت نام با ورود داده جدید
               />
             </div>
             <div className="mb-4">
@@ -91,7 +94,7 @@ function SignupPage() {
                 type="text"
                 placeholder="نام خانوادگی خود را وارد کنید"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => setLastName(e.target.value)} // بروزرسانی وضعیت نام خانوادگی با ورود داده جدید
               />
             </div>
             <div className="flex items-center justify-between">
@@ -113,4 +116,4 @@ function SignupPage() {
   );
 }
 
-export default SignupPage
+export default SignupPage;

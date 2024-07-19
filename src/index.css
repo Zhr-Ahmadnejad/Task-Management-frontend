@@ -1,30 +1,43 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ** پایه‌های Tailwind CSS ** */
+@tailwind base;        /* شامل استایل‌های پایه‌ای و پیش‌فرض `Tailwind CSS` مانند resetهای مرورگر و استایل‌های پایه */
+@tailwind components; /* شامل استایل‌های پیش‌ساخته و کامپوننت‌های `Tailwind CSS` که برای طراحی سریع استفاده می‌شود */
+@tailwind utilities;  /* شامل ابزارها و کلاس‌های کمکی `Tailwind CSS` برای استایل‌دهی مستقیم و کاربردی */
 
-body{
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont,
-   'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
+/* ** استایل‌های کلی برای کل صفحه ** */
+body {
+  margin: 0; /* حذف حاشیه‌های پیش‌فرض مرورگر از بدنه صفحه */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, /* تنظیم نوع فونت برای استفاده از فونت‌های سیستم در پلتفرم‌های مختلف */
+   'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif; /* لیست فونت‌های پشتیبان برای استفاده در صورت عدم وجود فونت‌های اصلی */
+  -webkit-font-smoothing: antialiased; /* بهبود نمایش فونت‌ها در مرورگرهای Webkit با ضدپیکسلی کردن فونت‌ها */
+  -moz-osx-font-smoothing: grayscale; /* بهبود نمایش فونت‌ها در مرورگرهای Firefox بر روی macOS با استفاده از ضدپیکسلی کردن به صورت خاکستری */
 }
 
-@layer components{
+/* ** تعریف کامپوننت‌های سفارشی با `@layer components` ** */
+@layer components {
   .button {
-    @apply text-white py-2 px-4 rounded-full text-lg font-semibold hover:opacity-80 duration-200
-
+    @apply text-white py-2 px-4 rounded-full text-lg font-semibold hover:opacity-80 duration-200;
+    /* 
+      کلاس سفارشی برای دکمه‌ها:
+      - `text-white`: رنگ متن دکمه سفید
+      - `py-2 px-4`: padding عمودی 2 و افقی 4
+      - `rounded-full`: حاشیه‌های گرد برای ایجاد دکمه‌های گرد
+      - `text-lg`: اندازه متن بزرگ
+      - `font-semibold`: وزن فونت نیمه‌زخیم
+      - `hover:opacity-80`: کاهش شفافیت به 80% هنگام hover روی دکمه
+      - `duration-200`: مدت زمان انیمیشن 200 میلی‌ثانیه
+    */
   }
 }
 
+/* ** کلاس‌های سفارشی برای انتخاب وضعیت (Select) ** */
 .select-status {
-  background-image: url('./Assets/icon-chevron-down.svg');
-  appearance: none;
-  background-repeat: no-repeat;
-  background-position: right 16px top 50%;
-  
+  background-image: url('./Assets/icon-chevron-down.svg'); /* قرار دادن یک تصویر به عنوان پس‌زمینه برای نمایش آیکون chevron در منوی کشویی */
+  appearance: none; /* حذف استایل‌های پیش‌فرض مرورگر برای انتخاب */
+  background-repeat: no-repeat; /* جلوگیری از تکرار تصویر پس‌زمینه */
+  background-position: right 16px top 50%; /* موقعیت تصویر پس‌زمینه در سمت راست و وسط از بالا */
 }
 
+/* ** رنگ پس‌زمینه سفارشی برای استفاده‌های مختلف ** */
 .bg-white {
-  background-color: #fff;
+  background-color: #fff; /* رنگ پس‌زمینه سفید */
 }

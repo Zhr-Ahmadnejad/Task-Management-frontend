@@ -1,39 +1,41 @@
 import React from "react";
 import XIcon from "./icons/x-icon.jsx";
 
-function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal ,closeModal}) {
-
+function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal, closeModal }) {
   return (
     <div
       className={
         type === "Boards"
-          ? " absolute  top-16  right-5"
-          : " absolute  top-6  right-4"
+          ? "absolute top-16 right-5"
+          : "absolute top-6 right-4"
       }
     >
-      <div className=" flex justify-end items-center">
-        <div className=" w-40 text-sm z-50 font-medium shadow-md shadow-[#364e7e1a] bg-white dark:bg-[#20212c] space-y-4 py-5 px-4 rounded-lg  h-auto pr-12">
+      <div className="flex justify-end items-center">
+        <div className="w-40 text-sm z-50 font-medium shadow-md shadow-[#364e7e1a] bg-white dark:bg-[#20212c] space-y-4 py-5 px-4 rounded-lg h-auto pr-12">
 
-          {closeModal &&
-              <button onClick={closeModal}>
-                <XIcon classes={"w-6"} />
-              </button>
-          }
+          {/* Close Button */}
+          {closeModal && (
+            <button onClick={closeModal}>
+              <XIcon classes={"w-6"} />
+            </button>
+          )}
 
+          {/* ویرایش آیتم */}
           <p
             onClick={() => {
               setOpenEditModal();
             }}
-            className=" cursor-pointer dark:text-gray-400 text-gray-700"
+            className="cursor-pointer dark:text-gray-400 text-gray-700"
           >
-            ویرایش 
+            ویرایش
           </p>
 
+          {/* حذف آیتم */}
           <p
             onClick={() => setOpenDeleteModal()}
-            className=" cursor-pointer text-red-500"
+            className="cursor-pointer text-red-500"
           >
-            حذف 
+            حذف
           </p>
         </div>
       </div>
@@ -42,3 +44,4 @@ function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal ,closeModal}) 
 }
 
 export default ElipsisMenu;
+

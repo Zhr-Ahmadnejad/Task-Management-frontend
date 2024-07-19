@@ -5,7 +5,6 @@ import lightIcon from '../Assets/icon-light-theme.svg'
 import darkIcon from '../Assets/icon-dark-theme.svg'
 import {Switch} from '@headlessui/react'
 import useDarkMode from '../Hooks/useDarkMode'
-import boardsSlice from '../Redux/boardsSlice'
 import SignoutIcon from '../Assets/sign_out_icon.jpg'
 import aboutUsIcon from '../Assets/about-us-icon_final.jpg';
 import {useNavigate, useSearchParams} from "react-router-dom";
@@ -13,67 +12,70 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 
-function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
-    const [colorTheme, setTheme] = useDarkMode()
-    const [darkSide, setdarkSide] = useState(colorTheme === 'light')
-    const [all_boards, setAll_boards] = useState([]);
-    const [check, setCheck] = useState(1);
-    const [boards_length, setBoards_length] = useState(0);
-    const dispatch = useDispatch()
+function HeaderDropdown({ setOpenDropdown, setBoardModalOpen }) {
+    const [colorTheme, setTheme] = useDarkMode(); // وضعیت تم را از hook useDarkMode دریافت می‌کند
+    const [darkSide, setdarkSide] = useState(colorTheme === 'light'); // وضعیت تاریکی/روشنی را بر اساس تم فعلی تنظیم می‌کند
+    const [all_boards, setAll_boards] = useState([]); // لیست تمام بردها از API
+    const [check, setCheck] = useState(1); // متغیر برای انجام مجدد درخواست به API
+    const [boards_length, setBoards_length] = useState(0); // تعداد بردهای دریافت شده از API
+    const dispatch = useDispatch(); // استفاده از useDispatch برای ارسال اعمال به store Redux
 
-    const toggleDarkMode = (checked) => { ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
-        setTheme(colorTheme) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
-        setdarkSide(checked) ///bara dorost kardan ghesmat dark mood(dokmehe) ast va useDarkMod dakhele file Hooks ast
-    }
+    // تغییر وضعیت تاریکی/روشنی
+    const toggleDarkMode = (checked) => {
+        setTheme(colorTheme); // تنظیم وضعیت تم بر اساس تم فعلی
+        setdarkSide(checked); // تنظیم وضعیت تاریکی/روشنی بر اساس وضعیت چک‌باکس
+    };
 
-    const boards = useSelector((state) => state.boards)
+    const boards = useSelector((state) => state.boards); // دریافت لیست بردها از store Redux
 
-
+    // درخواست دریافت بردها از API
     useEffect(() => {
-        (async ()=>{
-            const user_token = Cookies.get('token');
+        (async () => {
+            const user_token = Cookies.get('token'); // دریافت توکن از کوکی‌ها
 
             try {
-                const {data} = await axios.get("http://localhost:8088/api/user/boards",{
-                    headers : {
-                        Authorization : `Bearer ${user_token}`
+                const { data } = await axios.get("http://localhost:8088/api/user/boards", {
+                    headers: {
+                        Authorization: `Bearer ${user_token}` // ارسال توکن به عنوان هدر درخواست
                     }
-                })
+                });
 
-                if (data){
-                    setBoards_length(data.length)
-                    setAll_boards(data)
+                if (data) {
+                    setBoards_length(data.length); // تنظیم تعداد بردهای دریافت شده
+                    setAll_boards(data); // تنظیم لیست تمام بردها
                 }
-            }catch (err){
-                if(err.response.data === 'The token signature is invalid. '){
-                    signoutHandler()
+            } catch (err) {
+                if (err.response.data === 'The token signature is invalid. ') {
+                    signoutHandler(); // اجرای عملیات خروج در صورت نامعتبر بودن توکن
                 }
             }
-        })()
+        })();
     }, [check]);
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // استفاده از useNavigate برای انتقال به صفحات مختلف در React Router
 
+    // عملیات خروج کاربر
     const signoutHandler = () => {
-        Cookies.remove('token')
-        navigate("/signup",{
-            replace : true
-        })
-    }
+        Cookies.remove('token'); // حذف توکن از کوکی‌ها
+        navigate("/signup", {
+            replace: true // جایگزین کردن مسیر جاری با /signup
+        });
+    };
 
-    const board_handle = (id)=>{
-        navigate(`/home?=${id}`)
-        setOpenDropdown(false)
-    }
+    // انتقال به صفحه برد با شناسه مشخص
+    const board_handle = (id) => {
+        navigate(`/home?=${id}`); // انتقال به صفحه خانه با اضافه کردن پارامتر شناسه برد
+        setOpenDropdown(false); // بستن منو Dropdown پس از انتقال
+    };
 
-    let [searchParams] = useSearchParams();
-    let queryParam = searchParams.get("");
+    let [searchParams] = useSearchParams(); // دریافت پارامترهای جستجو از آدرس
+    let queryParam = searchParams.get(""); // دریافت مقدار پارامتر جستجوی فعلی
 
-    const go_to_dashboard = ()=> {
-        navigate('/home?=dashboard')
-        setOpenDropdown(false)
-    }
-
+    // انتقال به صفحه داشبورد
+    const go_to_dashboard = () => {
+        navigate('/home?=dashboard'); // انتقال به صفحه خانه با اضافه کردن پارامتر dashboard
+        setOpenDropdown(false); // بستن منو Dropdown پس از انتقال
+    };
 
     return (
         <div
@@ -81,22 +83,21 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
             onClick={
                 (e) => {
                     if (e.target !== e.currentTarget) {
-                        return
+                        return; // جلوگیری از بستن منو در صورت کلیک بر روی محتویات آن
                     }
-                    setOpenDropdown(false)
+                    setOpenDropdown(false); // بستن منو Dropdown در صورت کلیک بر روی پس زمینه
                 }
             }
         >
 
-
-            {/* { Dropdown modal } */}
-
+            {/* Modal Dropdown */}
             <div className='bg-white dark:bg-[#2b2c37] shadow-md shadow-[#364e7e1a] w-full py-4 rounded-xl'>
                 <h3 className=' dark:text-gray-300 text-gray-600 font-semibold mx-4 mb-8'>
-                    تمام بردها ({boards ? boards.length : 0})
+                    تمام بردها ({boards ? boards.length : 0}) {/* نمایش تعداد کل بردها */}
                 </h3>
 
                 <div>
+                    {/* نمایش لیست تمام بردها */}
                     {all_boards.map((itm) => (
                         <div
                             className={`cursor-pointer dark:text-white flex items-baseline space-x-2 px-5 py-4 
@@ -104,17 +105,16 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                             key={itm.id}
                             onClick={() => board_handle(itm.id)}
                         >
-
                             <img src={boardIcon} className='h-4'/>
                             <p className=' text-lg font-bold'> {itm.boardName}</p>
                         </div>
                     ))}
 
+                    {/* دکمه ساخت برد جدید */}
                     <div className=' cursor-pointer flex items-baseline space-x-2 text-[#416555] px-5 py-4'
-
                          onClick={() => {
-                             setBoardModalOpen(true)
-                             setOpenDropdown(false)
+                             setBoardModalOpen(true); // باز کردن مدال ساخت برد جدید
+                             setOpenDropdown(false); // بستن منو Dropdown
                          }}
                     >
                         <img src={boardIcon} className='h-4 '/>
@@ -123,6 +123,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                         </p>
                     </div>
 
+                    {/* دکمه داشبورد */}
                     <div className=' cursor-pointer flex items-baseline space-x-2 text-[#416555] px-5 py-4'
                          onClick={go_to_dashboard}
                     >
@@ -131,11 +132,11 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                             داشبورد
                         </p>
                     </div>
-                    {/* About us Button  */}
 
+                    {/* دکمه درباره‌ی ما */}
                     <div
                         onClick={() => {
-                            window.location.href = '/aboutUs'; // استفاده از window.location.href برای هدایت به صفحه ورود
+                            window.location.href = '/aboutUs'; // انتقال به صفحه درباره‌ی ما با استفاده از window.location.href
                         }}
                         className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
                     text-[#416555] px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
@@ -144,9 +145,11 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                             درباره ی ما
                         </p>
                     </div>
+
+                    {/* دکمه تنظیمات */}
                     <div
                         onClick={() => {
-                            window.location.href = '/ProfilePage';
+                            window.location.href = '/ProfilePage'; // انتقال به صفحه تنظیمات کاربری با استفاده از window.location.href
                         }}
                         className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
                     text-[#416555] px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
@@ -155,6 +158,8 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                             تنظیمات
                         </p>
                     </div>
+
+                    {/* دکمه خروج */}
                     <div
                         onClick={signoutHandler}
                         className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
@@ -165,6 +170,7 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
                         </p>
                     </div>
 
+                    {/* دکمه تغییر تم */}
                     <div
                         className=" mx-2  p-4  space-x-2 bg-slate-100 dark:bg-[#20212c] flex justify-center items-center rounded-lg">
                         <img src={lightIcon} alt="sun indicating light mode"/>
@@ -191,7 +197,8 @@ function HeaderDropdown({setOpenDropdown, setBoardModalOpen}) {
 
             </div>
         </div>
-    )
+    );
 }
 
-export default HeaderDropdown
+export default HeaderDropdown;
+

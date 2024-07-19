@@ -7,32 +7,31 @@ import {useNavigate} from "react-router-dom"
 import {toast} from "react-toastify";
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState(''); // وضعیت ایمیل ورودی کاربر
+  const [password, setPassword] = useState(''); // وضعیت رمز عبور ورودی کاربر
+  const [error, setError] = useState(''); // وضعیت خطا برای نمایش خطاهای ورود
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // استفاده از useNavigate برای انتقال به صفحات مختلف در React Router
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // جلوگیری از رفتن به صفحه جدید پس از ارسال فرم
 
     try {
-      const {data} = await axios.post('http://localhost:8088/api/login',{
+      const {data} = await axios.post('http://localhost:8088/api/login', {
         email, password
-      })
+      });
 
-      Cookies.set('token', data, { expires: 7 })
-      navigate("/home?=dashboard");
+      Cookies.set('token', data, { expires: 7 }); // ذخیره توکن در کوکی‌ها با انقضای ۷ روز
+      navigate("/home?=dashboard"); // انتقال کاربر به صفحه خانه با پارامتر
 
-     setError("")
-      const notify = () => toast("Welcome");
-      notify()
+      setError(""); // پاک کردن وضعیت خطا
+      const notify = () => toast("خوش اومدید"); // نمایش پیام خوش‌آمدگویی به کاربر
+      notify();
 
     } catch (error) {
-      console.error('Error:', error.response.data);
-      setError(error.response.data);
+      console.error('Error:', error.response.data); // چاپ خطا در کنسول
+      setError(error.response.data); // تنظیم خطای دریافتی برای نمایش به کاربر
     }
-
   };
 
   return (
@@ -44,7 +43,7 @@ function LoginPage() {
         <div className="col-span-1">
           <form onSubmit={handleSubmit}>
             <h2 className="text-2xl mb-4 text-center text-[#416555] font-semibold">Login</h2>
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>} {/* نمایش خطا اگر وجود داشته باشد */}
             <div className="mb-4">
               <label className="block text-[#416555] text-sm font-bold mb-2" htmlFor="email">
                 ایمیل
@@ -82,7 +81,7 @@ function LoginPage() {
                 ورود
               </button>
               <Link to="/signup" className="text-[#416555] text-sm font-bold">
-                حساب کاربری نداری؟ثبتنام کن
+                حساب کاربری نداری؟ ثبت‌نام کن
               </Link>
             </div>
           </form>
