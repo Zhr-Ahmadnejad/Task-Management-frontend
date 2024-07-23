@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import AddEditBoardModal from "./AddEditBoardModal";
+import AddEditBoardModal from "../Modals/AddEditBoardModal";
 
 function EmptyBoard({ type, check, setCheck }) {
   // State برای کنترل باز بودن یا بسته بودن مدال ایجاد/ویرایش برد

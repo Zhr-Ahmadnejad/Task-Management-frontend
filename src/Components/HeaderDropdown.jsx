@@ -77,6 +77,11 @@ function HeaderDropdown({ setOpenDropdown, setBoardModalOpen }) {
         setOpenDropdown(false); // بستن منو Dropdown پس از انتقال
     };
 
+    const go_to_chart_page = () => {
+        navigate('/task-chart');
+        setOpenDropdown(false);
+    };
+
     return (
         <div
             className=' py-10 px-6 absolute left-0 right-0 bottom-[-100vh] top-20 bg-[#00000080]'
@@ -130,6 +135,15 @@ function HeaderDropdown({ setOpenDropdown, setBoardModalOpen }) {
                         <img src={boardIcon} className='h-4 '/>
                         <p className='text-lg font-bold'>
                             داشبورد
+                        </p>
+                    </div>
+
+                    <div className=' cursor-pointer flex items-baseline space-x-2 text-[#416555] px-5 py-4'
+                         onClick={go_to_chart_page} 
+                    >
+                        <img src={boardIcon} className='h-4 '/>
+                        <p className='text-lg font-bold'>
+                            نمودار وضعیت تسک‌ها
                         </p>
                     </div>
 

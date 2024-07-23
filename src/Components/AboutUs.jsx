@@ -26,7 +26,7 @@ function AboutUs() {
           onClick={handleHomeClick}  // فراخوانی تابع handleHomeClick هنگام کلیک روی دکمه
           className="px-4 py-2 bg-[#416555] text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 self-start mt-8"
         >
-          Home
+          خانه
         </button>
       </div>
     </div>

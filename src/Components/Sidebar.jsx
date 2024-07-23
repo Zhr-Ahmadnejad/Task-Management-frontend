@@ -64,6 +64,11 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
         navigate(`/home?=${id}`); // انتقال کاربر به برد مورد نظر بر اساس شناسه
     };
 
+    const go_to_chart_page = () => {
+        navigate('/task-chart');
+        setOpenDropdown(false);
+    };
+
     const go_to_dashboard = () => navigate('/home?=dashboard'); // انتقال کاربر به داشبورد
 
     let [searchParams] = useSearchParams(); // استفاده از useSearchParams برای دریافت پارامترهای جستجو از URL
@@ -118,6 +123,17 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                                         <img src={boardIcon} className=' h-4' alt='board icon' />
                                         <p className=' text-lg font-bold'>
                                             داشبورد
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        onClick={go_to_chart_page}
+                                        className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
+                                                                  text-green-300 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'
+                                    >
+                                        <img src={boardIcon} className=' h-4' alt='board icon' />
+                                        <p className=' text-lg font-bold'>
+                                            نمودار وضعیت وظایف
                                         </p>
                                     </div>
 

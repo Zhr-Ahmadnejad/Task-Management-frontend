@@ -8,15 +8,6 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "react-toastify";
 
 
-import React, { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // برای تولید شناسه‌های یکتا برای ستون‌ها
-import Cookies from 'js-cookie';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import XIcon from '../Assets/XIcon'; // فرض بر این است که این کامپوننت یا تصویر برای بستن مودال استفاده می‌شود
-import crossIcon from '../Assets/crossIcon.png'; // فرض بر این است که این تصویر برای حذف ستون استفاده می‌شود
-
 function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
   // وضعیت نام برد
   const [name, setName] = useState('');

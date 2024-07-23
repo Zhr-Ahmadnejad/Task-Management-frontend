@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
+import TaskChartPage from './Components/TaskChartPage';
 
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
                         <Route path="/aboutUs" element={tokenData ? <AboutUs/> : <Navigate to="/"/>}/>
                         {/* مسیر برای صفحه پروفایل که کاربر را به صفحه ورود هدایت می‌کند اگر توکن وجود نداشته باشد */}
                         <Route path="/ProfilePage" element={tokenData ? <ProfilePage/> : <Navigate to="/"/>}/>
+                        <Route path="/task-chart" element={<TaskChartPage/>}/>
                     </Routes>
                 </Router>
             </>
