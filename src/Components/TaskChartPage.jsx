@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'; // وارد کردن کتابخانه React و hooks آن
-import axios from 'axios'; // وارد کردن کتابخانه axios برای درخواست‌های HTTP
-import { Bar } from 'react-chartjs-2'; // وارد کردن نمودار میله‌ای از کتابخانه react-chartjs-2
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'; // وارد کردن اجزای مورد نیاز از کتابخانه chart.js
-import Cookies from 'js-cookie'; // وارد کردن کتابخانه js-cookie برای مدیریت کوکی‌ها
-import { useNavigate } from 'react-router-dom'; // وارد کردن hook برای ناوبری
-import moment from 'jalali-moment';  // وارد کردن jalali-moment برای تاریخ‌های ایرانی
-import html2canvas from 'html2canvas';  // وارد کردن html2canvas برای ضبط محتوای صفحه
-import jsPDF from 'jspdf';  // وارد کردن jsPDF برای تولید فایل‌های PDF
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'; 
+import { Bar } from 'react-chartjs-2'; 
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import Cookies from 'js-cookie'; 
+import { useNavigate } from 'react-router-dom'; 
+import moment from 'jalali-moment';  
+import html2canvas from 'html2canvas';  
+import jsPDF from 'jspdf';  
 
 // ثبت اجزای مورد نیاز برای Chart.js
 ChartJS.register(
@@ -19,84 +19,82 @@ ChartJS.register(
 );
 
 const TaskChartPage = () => {
-  // تعریف stateها با استفاده از useState
-  const [chartData, setChartData] = useState({}); // داده‌های نمودار
-  const [loading, setLoading] = useState(true); // وضعیت بارگذاری
-  const [error, setError] = useState(null); // خطاهای احتمالی
-  const [currentDateTime, setCurrentDateTime] = useState(''); // تاریخ و زمان جاری
-  const [totalTasks, setTotalTasks] = useState(0); // تعداد کل وظایف
-  const [totalStartTasks, setTotalStartTasks] = useState(0); // تعداد وظایف در وضعیت شروع
-  const [totalEndTasks, setTotalEndTasks] = useState(0); // تعداد وظایف در وضعیت پایان
-  const navigate = useNavigate(); // ایجاد متغیر navigate برای ناوبری
+
+  const [chartData, setChartData] = useState({});
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [currentDateTime, setCurrentDateTime] = useState(''); 
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [totalStartTasks, setTotalStartTasks] = useState(0); 
+  const [totalEndTasks, setTotalEndTasks] = useState(0); 
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchData = async () => {
-      const user_token = Cookies.get('token'); // دریافت توکن کاربر از کوکی‌ها
+      const user_token = Cookies.get('token'); 
 
       try {
-        // انجام درخواست‌های همزمان برای دریافت داده‌های وظایف شروع، پایان و تمام وظایف
         const [startResponse, endResponse, allTasksResponse] = await Promise.all([
           axios.get('http://localhost:8088/api/user/board/tasks/start', {
             headers: {
-              Authorization: `Bearer ${user_token}` // ارسال توکن در هدر
+              Authorization: `Bearer ${user_token}` 
             }
           }),
           axios.get('http://localhost:8088/api/user/board/tasks/end', {
             headers: {
-              Authorization: `Bearer ${user_token}` // ارسال توکن در هدر
+              Authorization: `Bearer ${user_token}` 
             }
           }),
           axios.get('http://localhost:8088/api/user/board/tasks/user', {
             headers: {
-              Authorization: `Bearer ${user_token}` // ارسال توکن در هدر
+              Authorization: `Bearer ${user_token}`
             }
           })
         ]);
 
-        const startTasks = startResponse.data; // دریافت داده‌های وظایف شروع
-        const endTasks = endResponse.data; // دریافت داده‌های وظایف پایان
-        const allTasks = allTasksResponse.data; // دریافت داده‌های تمام وظایف
+        const startTasks = startResponse.data; 
+        const endTasks = endResponse.data; 
+        const allTasks = allTasksResponse.data; 
 
-        const totalStartTasks = startTasks.length; // محاسبه تعداد وظایف در وضعیت شروع
-        const totalEndTasks = endTasks.length; // محاسبه تعداد وظایف در وضعیت پایان
-        const totalTasks = allTasks.length; // محاسبه تعداد کل وظایف
+        const totalStartTasks = startTasks.length; 
+        const totalEndTasks = endTasks.length; 
+        const totalTasks = allTasks.length; 
 
-        // محاسبه درصد وظایف در وضعیت‌های شروع و پایان
+
         const startPercentage = (totalStartTasks / totalTasks * 100).toFixed(2);
         const endPercentage = (totalEndTasks / totalTasks * 100).toFixed(2);
 
-        // تنظیم داده‌های نمودار
+    
         setChartData({
-          labels: ['شروع', 'پایان'], // برچسب‌های محور x
+          labels: ['شروع', 'پایان'], 
           datasets: [{
             label: 'درصد وظایف در وضعیت‌های شروع و پایان',
-            data: [startPercentage, endPercentage], // داده‌های نمودار
-            backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 99, 132, 0.5)'], // رنگ پس‌زمینه نوارها
-            borderColor: ['rgba(75, 192, 192, 1.5)', 'rgba(255, 99, 132, 1.5)'], // رنگ مرز نوارها
+            data: [startPercentage, endPercentage], 
+            backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+            borderColor: ['rgba(75, 192, 192, 1.5)', 'rgba(255, 99, 132, 1.5)'],
             borderWidth: 1,
           }]
         });
 
-        // تنظیم تعداد وظایف
+        
         setTotalStartTasks(totalStartTasks);
         setTotalEndTasks(totalEndTasks);
         setTotalTasks(totalTasks);
 
         setLoading(false); // تغییر وضعیت بارگذاری به false
       } catch (err) {
-        setError('خطا در بارگذاری داده‌ها.'); // تنظیم پیام خطا در صورت بروز خطا
-        console.error('Failed to fetch tasks:', err); // ثبت خطا در کنسول
+        setError('خطا در بارگذاری داده‌ها.');
+        console.error('Failed to fetch tasks:', err); 
         setLoading(false); // تغییر وضعیت بارگذاری به false
       }
     };
 
-    fetchData(); // فراخوانی تابع برای دریافت داده‌ها
-  }, []); // استفاده از useEffect بدون وابستگی برای اجرای تنها یک بار
+    fetchData(); 
+  }, []); 
 
   useEffect(() => {
-    // تابعی برای بروزرسانی تاریخ و زمان
     const updateDateTime = () => {
-      const now = moment().format('YYYY/MM/DD HH:mm:ss'); // دریافت تاریخ و زمان جاری به فرمت ایرانی
+      const now = moment().format('YYYY/MM/DD HH:mm:ss'); 
       setCurrentDateTime(now);
     };
 
@@ -104,19 +102,19 @@ const TaskChartPage = () => {
     const intervalId = setInterval(updateDateTime, 1000); // بروزرسانی هر ثانیه
 
     return () => clearInterval(intervalId); // پاکسازی بازه زمانی در زمان unmount کامپوننت
-  }, []); // استفاده از useEffect بدون وابستگی برای اجرای تنها یک بار
+  }, []); // 
 
   const handleBackClick = () => {
-    navigate('/home'); // ناوبری به صفحه اصلی
+    navigate('/home'); 
   };
 
   const downloadPDF = () => {
     // مخفی کردن دکمه‌ها قبل از ضبط محتوا
     const buttons = document.querySelector('#reportButtons');
-    buttons.style.visibility = 'hidden';  // مخفی کردن دکمه‌ها به جای استفاده از display: none
+    buttons.style.visibility = 'hidden'; 
 
     html2canvas(document.querySelector('#reportContent')).then(canvas => {
-      const imgData = canvas.toDataURL('image/png'); // تبدیل تصویر به فرمت PNG
+      const imgData = canvas.toDataURL('image/png'); 
       const pdf = new jsPDF('p', 'mm', 'a4'); // ایجاد فایل PDF
       pdf.addImage(imgData, 'PNG', 10, 10, 190, 0); // افزودن تصویر به فایل PDF
       pdf.save(`finalReport-${currentDateTime}.pdf`); // ذخیره فایل PDF با نام report.pdf
@@ -146,47 +144,47 @@ const TaskChartPage = () => {
         ) : (
           <>
             <Bar
-              data={chartData} // داده‌های نمودار
+              data={chartData} 
               options={{
-                responsive: true, // قابلیت پاسخگویی نمودار
+                responsive: true, 
                 plugins: {
                   title: {
                     display: true,
                     text: 'نمودار درصد وظایف در وضعیت‌های شروع و پایان',
-                    color: '#416555'  // رنگ عنوان نمودار
+                    color: '#416555' 
                   },
                   legend: {
                     position: 'top',
                     labels: {
-                      color: '#416555'  // رنگ legend
+                      color: '#416555' 
                     }
                   },
                   tooltip: {
                     callbacks: {
                       label: (context) => {
-                        return `${context.label}: ${context.raw}%`; // فرمت tooltip
+                        return `${context.label}: ${context.raw}%`; 
                       }
                     },
-                    backgroundColor: '#416555', // رنگ پس‌زمینه tooltip
-                    titleColor: '#fff', // رنگ عنوان tooltip
-                    bodyColor: '#fff', // رنگ متن tooltip
+                    backgroundColor: '#416555', 
+                    titleColor: '#fff', 
+                    bodyColor: '#fff', 
                   }
                 },
-                maintainAspectRatio: true, // حفظ نسبت ابعاد نمودار
+                maintainAspectRatio: true, 
                 scales: {
                   y: {
-                    beginAtZero: true, // شروع محور y از صفر
+                    beginAtZero: true, 
                     ticks: {
-                      callback: (value) => `${value}%`, // فرمت برچسب‌های محور y
-                      color: '#416555'  // رنگ برچسب‌های محور y
+                      callback: (value) => `${value}%`, 
+                      color: '#416555'  
                     },
                     grid: {
-                      color: '#416555'  // رنگ خطوط شبکه محور y
+                      color: '#416555'  
                     }
                   },
                   x: {
                     grid: {
-                      color: '#416555'  // رنگ خطوط شبکه محور x
+                      color: '#416555'  
                     }
                   }
                 },
@@ -200,7 +198,7 @@ const TaskChartPage = () => {
           </>
         )}
 
-        <div id="reportButtons" className="mt-6 flex justify-between fixed bottom-4 right-4"> {/* استایل برای دکمه‌ها */}
+        <div id="reportButtons" className="mt-6 flex justify-between fixed bottom-4 right-4"> 
           <button
             onClick={handleBackClick}
             className="bg-[#2b4d3f] text-white px-4 py-2 rounded hover:bg-[#1f3b31] dark:bg-[#2b2c37] dark:hover:bg-[#3b3c47]"
