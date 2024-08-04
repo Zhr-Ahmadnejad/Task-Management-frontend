@@ -177,7 +177,7 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
         >
           <p className="font-bold tracking-wide">{col_data.taskName}</p>
           <p className="font-bold text-xs tracking-tighter mt-2 text-gray-500">
-            {check_completed} of {col_data?.subTasks.length} completed tasks
+          وظایف فرعی تکمیل شده {check_completed} / {col_data?.subTasks.length} 
           </p>
         </div>
       ) : (
@@ -195,7 +195,7 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
             >
               <p className="font-bold tracking-wide">{col_data.taskName}</p>
               <p className="font-bold text-xs tracking-tighter mt-2 text-gray-500">
-                {check_completed} of {col_data?.subTasks.length} completed tasks
+              وظایف فرعی تکمیل شده {check_completed} / {col_data?.subTasks.length} 
               </p>
             </div>
           )}

@@ -34,6 +34,8 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
     if (!queryParam) setFirst_add(true);
   }, []);
 
+  console.log('Board ID edit:', queryParam);
+
   // بارگذاری داده‌های برد در صورت ویرایش یا ویرایش مجدد
   useEffect(() => {
     if (type === 'edit' || type === 'edit-2') {

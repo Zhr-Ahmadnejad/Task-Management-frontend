@@ -42,7 +42,7 @@ function LoginPage() {
         </div>
         <div className="col-span-1">
           <form onSubmit={handleSubmit}>
-            <h2 className="text-2xl mb-4 text-center text-[#416555] font-semibold">Login</h2>
+            <h2 className="text-2xl mb-4 text-center text-[#416555] font-semibold">ورود</h2>
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>} {/* نمایش خطا اگر وجود داشته باشد */}
             <div className="mb-4">
               <label className="block text-[#416555] text-sm font-bold mb-2" htmlFor="email">

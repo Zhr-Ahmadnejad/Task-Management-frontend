@@ -40,50 +40,42 @@ function App() {
                         }
                     });
 
-                    // اگر داده‌ها دریافت شد، وضعیت boards_data را به‌روزرسانی کن
                     if (data) {
                         setBoards_data(data);
                     }
                 } catch (err) {
-                    // نمایش خطا در صورت بروز مشکل در درخواست API
                     console.log(err);
                 }
             })();
         }
-    }, [check]);  // استفاده از check به عنوان وابستگی برای به‌روزرسانی داده‌ها
+    }, [check]);  
 
     return (
         <div className="overflow-hidden overflow-x-scroll">
             <>
                 <Router>
                     <Routes>
-                        {/* مسیر برای صفحه اصلی */}
                         <Route path="/home" element={
-                            boards_data.length > 0 ? (  // اگر داده‌های برد وجود داشته باشد
+                            boards_data.length > 0 ? ( 
                                 <>
                                     <Header
-                                        setBoardModalOpen={setBoardModalOpen}  // تابع برای باز و بسته کردن مودال برد
-                                        boardModalOpen={boardModalOpen}  // وضعیت باز بودن مودال برد
+                                        setBoardModalOpen={setBoardModalOpen} 
+                                        boardModalOpen={boardModalOpen}
                                     />
-                                    <Center />  {/* کامپوننت مرکزی برای نمایش محتوای اصلی */}
+                                    <Center />
                                 </>
                             ) : (
-                                <EmptyBoard type='add' check={check} setCheck={setCheck} />  // نمایش حالت خالی برد اگر داده‌ای وجود نداشته باشد
+                                <EmptyBoard type='add' check={check} setCheck={setCheck} /> 
                             )
                         }/>
-                        {/* مسیر برای صفحه اصلی که کاربر را به "/home" هدایت می‌کند اگر توکن وجود داشته باشد */}
                         <Route path="/" element={tokenData ? <Navigate to="/home"/> : <LoginPage/>}/>
-                        {/* مسیر برای صفحه ثبت‌نام */}
                         <Route path="/signup" element={<SignupPage/>}/>
-                        {/* مسیر برای صفحه درباره ما که کاربر را به صفحه ورود هدایت می‌کند اگر توکن وجود نداشته باشد */}
                         <Route path="/aboutUs" element={tokenData ? <AboutUs/> : <Navigate to="/"/>}/>
-                        {/* مسیر برای صفحه پروفایل که کاربر را به صفحه ورود هدایت می‌کند اگر توکن وجود نداشته باشد */}
                         <Route path="/ProfilePage" element={tokenData ? <ProfilePage/> : <Navigate to="/"/>}/>
                         <Route path="/task-chart" element={<TaskChartPage/>}/>
                     </Routes>
                 </Router>
             </>
-            {/* کامپوننت برای نمایش پیام‌های اطلاع‌رسانی */}
             <ToastContainer/>
         </div>
     );

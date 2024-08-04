@@ -1,7 +1,7 @@
 import React from "react";
 import XIcon from "./icons/x-icon.jsx";
 
-function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal, closeModal }) {
+function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal, closeModal, setOpenReportModal }) {
   return (
     <div
       className={
@@ -20,7 +20,7 @@ function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal, closeModal })
             </button>
           )}
 
-          {/* ویرایش آیتم */}
+          {/* Edit Item */}
           <p
             onClick={() => {
               setOpenEditModal();
@@ -29,8 +29,15 @@ function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal, closeModal })
           >
             ویرایش
           </p>
+          {/* Report Button */}
+          <p
+            onClick={() => setOpenReportModal()}
+            className="cursor-pointer dark:text-gray-400 text-gray-700"
+          >
+            گزارشگیری
+          </p>
 
-          {/* حذف آیتم */}
+          {/* Delete Item */}
           <p
             onClick={() => setOpenDeleteModal()}
             className="cursor-pointer text-red-500"
@@ -44,4 +51,3 @@ function ElipsisMenu({ type, setOpenEditModal, setOpenDeleteModal, closeModal })
 }
 
 export default ElipsisMenu;
-

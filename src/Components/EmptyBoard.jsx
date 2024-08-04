@@ -20,10 +20,9 @@ function EmptyBoard({ type, check, setCheck }) {
     if (tokenData && check) {
       (async () => {
         try {
-          // ارسال درخواست GET به API برای دریافت لیست بردهای کاربر
           const { data } = await axios.get("http://localhost:8088/api/user/boards", {
             headers: {
-              Authorization: `Bearer ${tokenData}`  // اضافه کردن توکن به هدر درخواست برای احراز هویت
+              Authorization: `Bearer ${tokenData}` 
             }
           });
 
