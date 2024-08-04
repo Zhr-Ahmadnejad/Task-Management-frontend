@@ -6,19 +6,18 @@ import axios from "axios";
 
 function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
   const [task_sorted, setTask_sorted] = useState([]);  // استفاده از استیت برای نگهداری لیست مرتب‌شده وظایف
-  const [all_task_checked, setAll_task_checked] = useState([]);  // استفاده از استیت برای نگهداری لیست وظایف که بررسی شده‌اند
+  const [all_task_checked, setAll_task_checked] = useState([]);
 
-  // پیدا کردن آخرین ستون با stateName 'پایان' از میان همه ستون‌ها
+ 
   const final_col = allTasks.find((itm) => itm.stateName === 'پایان');
 
-  // دریافت پارامترهای جستجو از URL
+  
   let [searchParams] = useSearchParams();
   let queryParam = searchParams.get("");
 
-  // دریافت توکن کاربر از کوکی‌ها
+ 
   const user_token = Cookies.get('token');
 
-  // افزودن اثر بخش برای دریافت وظایف از سرور بر اساس پارامترهای جستجو و توکن
   useEffect(() => {
     if (queryParam !== 'dashboard' && user_token) {
       (async () => {
@@ -30,7 +29,6 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
           });
 
           if (data) {
-            // فیلتر و مرتب‌سازی وظایف دریافتی از API
             const filtered = data.map(task => ({
               id: task.id,
               taskStateId: task.taskStateId,
@@ -38,12 +36,12 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
               draggable: false,
             }));
 
-            const sorted = sortTasks(filtered);  // مرتب‌سازی وظایف
+            const sorted = sortTasks(filtered);  
 
-            setTask_sorted(sorted);  // تنظیم وظایف مرتب‌شده در استیت
+            setTask_sorted(sorted);  
           }
         } catch (err) {
-          console.log(err);  // نمایش خطا در صورت وجود خطا
+          console.log(err);  
         }
       })();
     }
@@ -64,7 +62,7 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
     setIsTaskModalOpen(true);
   };
 
-  // محاسبه تعداد وظایف کامل شده
+  
   const check_completed = col_data?.subTasks.filter(task => !task.active).length;
 
   // تابع برای مرتب‌سازی وظایف بر اساس وابستگی‌هایشان
@@ -96,7 +94,7 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
     return result;
   };
 
-  // تابع برای بروزرسانی درستی عملکرد موارد آزمایشی
+
   const test = () => {
     // بررسی خالی بودن آرایه وظایف
     const is_empty_array = task_sorted
@@ -162,7 +160,7 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
   // بررسی کشیده شدن برای عنصر فعلی
   const checkDrag = all_task_checked.find((itm) => itm?.id === col_data?.id);
 
-  // بازگشت به UI
+
   return (
     <div>
       {queryParam === 'dashboard' ? (
@@ -202,7 +200,6 @@ function Task({ colIndex, taskIndex, col_data, setCheck, allTasks }) {
         </>
       )}
 
-      {/* نمایش مدال وظیفه اگر باز باشد */}
       {isTaskModalOpen && (
         <TaskModal
           colIndex={colIndex}

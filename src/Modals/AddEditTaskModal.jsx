@@ -7,38 +7,36 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import Cookies from "js-cookie";
 
 function AddEditTaskModal({
-    type,  // نوع عملیات: "edit" برای ویرایش و "add" برای ایجاد تسک جدید
-    device,  // نوع دستگاه برای تعیین کلاس CSS مناسب (موبایل یا دسکتاپ)
-    setIsAddTaskModalOpen,  // تابعی برای باز و بسته کردن مودال
-    data_edited  // داده‌های تسک برای حالت ویرایش
+    type,  
+    device,  
+    setIsAddTaskModalOpen,  
+    data_edited  
 }) {
 
-    // وضعیت‌های مختلف برای نگهداری داده‌های فرم
-    const [title, setTitle] = useState("");  // عنوان تسک
-    const [description, setDescription] = useState("");  // توضیحات تسک
-    const [list_selector, setList_selector] = useState([]);  // لیست تسک‌های وابسته برای انتخاب
+ 
+    const [title, setTitle] = useState("");  
+    const [description, setDescription] = useState("");  
+    const [list_selector, setList_selector] = useState([]);  
     const [list_tasks, setList_tasks] = useState([]);  // لیست تسک‌های وابسته انتخاب‌شده
     const [status, setStatus] = useState("");  // وضعیت فعلی تسک
-    const [subtasks, setSubtasks] = useState([  // تسک‌های فرعی با مقدار اولیه
+    const [subtasks, setSubtasks] = useState([ 
         { title: "", isCompleted: false, id: uuidv4() },
         { title: "", isCompleted: false, id: uuidv4() },
     ]);
-    const [taskState, setTaskState] = useState([]);  // لیست وضعیت‌های تسک
+    const [taskState, setTaskState] = useState([]);  
     const [stateId, setStateId] = useState("");  // شناسه وضعیت فعلی
 
-    // دریافت پارامترهای جست‌وجو از URL
     let [searchParams] = useSearchParams();
-    let queryParam = searchParams.get("");  // پارامتر جست‌وجو برای شناسه برد
+    let queryParam = searchParams.get("");  
 
-    const navigate = useNavigate();  // تابعی برای ناوبری در برنامه
-    const user_token = Cookies.get('token');  // توکن کاربر از کوکی‌ها برای احراز هویت
+    const navigate = useNavigate();  // تابعی برای بروز رسانی در برنامه
+    const user_token = Cookies.get('token');  
 
-    // بارگذاری داده‌های مربوط به تسک‌های وابسته و وضعیت‌های تسک هنگام بارگذاری کامپوننت
+
     useEffect(() => {
         if (queryParam !== 'dashboard') {
             (async () => {
                 try {
-                    // درخواست برای دریافت تسک‌های وابسته
                     const { data } = await axios.get(`http://localhost:8088/api/user/board/tasks/boardId/${+queryParam}`, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -53,18 +51,18 @@ function AddEditTaskModal({
                         setList_selector(filteredData);  // ذخیره تسک‌های وابسته در وضعیت
                     }
                 } catch (err) {
-                    console.log(err);  // لاگ خطا در صورت بروز مشکل
+                    console.log(err); 
                 }
             })();
         }
-    }, []);  // وابستگی‌های خالی برای اجرای فقط در بارگذاری اولیه
+    }, []);  
 
-    // بارگذاری داده‌های تسک و وضعیت‌ها هنگام ورود به حالت ویرایش یا ایجاد جدید
+    
     useEffect(() => {
         if (type === "edit") {
-            setTitle(data_edited.taskName);  // تنظیم عنوان تسک
-            setDescription(data_edited?.description);  // تنظیم توضیحات تسک
-            setSubtasks(data_edited?.subTasks);  // تنظیم تسک‌های فرعی
+            setTitle(data_edited.taskName);  
+            setDescription(data_edited?.description); 
+            setSubtasks(data_edited?.subTasks); 
 
             // تنظیم تسک‌های وابسته با استفاده از داده‌های ویرایش شده
             const filteredTasks = data_edited.dependentTaskIds.map(id => {
@@ -72,11 +70,11 @@ function AddEditTaskModal({
                 return task ? { id: task.id, name: task.taskName } : null;
             }).filter(task => task !== null);
 
-            setList_tasks(filteredTasks);  // ذخیره تسک‌های وابسته انتخاب‌شده
+            setList_tasks(filteredTasks);  
 
             (async () => {
                 try {
-                    // دریافت وضعیت‌های تسک برای حالت ویرایش
+                   
                     const { data } = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -84,18 +82,18 @@ function AddEditTaskModal({
                     });
 
                     if (data) {
-                        setTaskState(data.taskStates);  // ذخیره وضعیت‌های تسک
-                        setStateId(data.taskStates[0].id);  // تنظیم وضعیت اولیه
+                        setTaskState(data.taskStates);  
+                        setStateId(data.taskStates[0].id); 
                     }
                 } catch (err) {
-                    console.log(err);  // لاگ خطا در صورت بروز مشکل
+                    console.log(err);  
                 }
             })();
 
         } else {
             (async () => {
                 try {
-                    // دریافت وضعیت‌های تسک برای حالت ایجاد جدید
+                    
                     const { data } = await axios.get(`http://localhost:8088/api/user/boards/${+queryParam}`, {
                         headers: {
                             Authorization: `Bearer ${user_token}`
@@ -103,17 +101,17 @@ function AddEditTaskModal({
                     });
 
                     if (data) {
-                        setTaskState(data.taskStates);  // ذخیره وضعیت‌های تسک
-                        setStateId(data.taskStates[0].id);  // تنظیم وضعیت اولیه
+                        setTaskState(data.taskStates); 
+                        setStateId(data.taskStates[0].id);  
                     }
                 } catch (err) {
-                    console.log(err);  // لاگ خطا در صورت بروز مشکل
+                    console.log(err);  
                 }
             })();
         }
-    }, []);  // وابستگی‌های خالی برای اجرای فقط در بارگذاری اولیه
+    }, []);  
 
-    // به‌روزرسانی عنوان تسک‌های فرعی
+   
     const onChangeSubtasks = (id, newValue) => {
         setSubtasks((prevState) => {
             const newState = [...prevState];
@@ -123,7 +121,7 @@ function AddEditTaskModal({
         });
     };
 
-    // به‌روزرسانی وضعیت فعلی تسک و تنظیم شناسه وضعیت
+    
     const onChangeStatus = (e) => {
         setStatus(e.target.value);
 
@@ -149,7 +147,7 @@ function AddEditTaskModal({
         setSubtasks((prevState) => prevState.filter((el) => el.id !== id));
     };
 
-    // بستن مودال در صورت کلیک در خارج از محتوای مودال
+  
     const closeHandler = (e) => {
         if (e.target !== e.currentTarget) {
             return;
@@ -157,16 +155,16 @@ function AddEditTaskModal({
         setIsAddTaskModalOpen(false);
     };
 
-    // ایجاد یا ویرایش تسک بر اساس نوع عملیات
+  
     const create_task_handler = async () => {
         const isValid = validate();  // اعتبارسنجی فرم
 
-        const subtaskSort = subtasks.map((itm) => itm.title);  // استخراج عنوان تسک‌های فرعی
-        const dependencies = list_tasks.map(itm => itm.id);  // استخراج شناسه‌های تسک‌های وابسته
+        const subtaskSort = subtasks.map((itm) => itm.title);
+        const dependencies = list_tasks.map(itm => itm.id); 
 
         if (type === 'edit') {
             try {
-                // ارسال درخواست PUT برای ویرایش تسک
+          
                 const { data } = await axios.put(`http://localhost:8088/api/user/board/tasks/${data_edited.id}`, {
                     taskName: title ? title : null,
                     description: description ? description : null,
@@ -184,12 +182,11 @@ function AddEditTaskModal({
                     navigate(0);  // به‌روزرسانی صفحه
                 }
             } catch (err) {
-                console.log(err);  // لاگ خطا در صورت بروز مشکل
+                console.log(err);  
             }
         } else {
             if (isValid) {
                 try {
-                    // ارسال درخواست POST برای ایجاد تسک جدید
                     const { data } = await axios.post("http://localhost:8088/api/user/board/tasks", {
                         taskName: title,
                         description: description,
@@ -208,7 +205,7 @@ function AddEditTaskModal({
                         navigate(0);  // به‌روزرسانی صفحه
                     }
                 } catch (err) {
-                    console.log(err);  // لاگ خطا در صورت بروز مشکل
+                    console.log(err);  
                 }
             }
         }
@@ -226,7 +223,7 @@ function AddEditTaskModal({
         }
     };
 
-    // حذف یک تسک وابسته بر اساس شناسه
+   
     const remove_task = (id) => {
         const removing_task = list_tasks.filter(itm => itm.id !== id);
         setList_tasks(removing_task);
@@ -241,7 +238,7 @@ function AddEditTaskModal({
             }
             onClick={closeHandler}
         >
-            {/* Modal Section */}
+  
 
             <div
                 className=" scrollbar-hide overflow-y-scroll max-h-[95vh]  my-auto  bg-white dark:bg-[#2b2c37] text-black dark:text-white font-bold
@@ -256,7 +253,6 @@ function AddEditTaskModal({
                     {type === "edit" ? "ویرایش" : "ساخت"} وظیفه
                 </h3>
 
-                {/* Task Name */}
 
                 <div className="mt-8 flex flex-col space-y-1">
                     <label className="  text-sm dark:text-white text-gray-500">
@@ -305,7 +301,6 @@ function AddEditTaskModal({
 
                 </div>
 
-                {/* Description */}
                 <div className="mt-8 flex flex-col space-y-1">
                     <label className="  text-sm dark:text-white text-gray-500">
                         توضیحات
@@ -318,8 +313,6 @@ function AddEditTaskModal({
                         placeholder="به طور مثال : ارسال ایمیل برای تمرین پایانی"
                     />
                 </div>
-
-                {/* Subtasks */}
 
                 <div className="mt-8 flex flex-col space-y-3">
                     <label className="  text-sm dark:text-white text-gray-500">
@@ -360,8 +353,6 @@ function AddEditTaskModal({
                     </button>
                 </div>
 
-                {/* Current Status  */}
-
                 <div className="mt-8 flex flex-col space-y-3">
                     <label className="  text-sm dark:text-white text-gray-500">
                         وضعیت فعلی
@@ -375,8 +366,6 @@ function AddEditTaskModal({
                             <option key={index}>{column.stateName}</option>
                         ))}
                     </select>
-
-                    {/* Create "create task button" */}
 
                     <button
                         onClick={create_task_handler}

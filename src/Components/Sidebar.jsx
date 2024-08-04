@@ -14,42 +14,41 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import axios from "axios";
 
 function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
-    const [colorTheme, setTheme] = useDarkMode(); // استفاده از useDarkMode برای مدیریت حالت روشن و تاریک
-    const [darkSide, setdarkSide] = useState(colorTheme === 'light'); // استفاده از useState برای نگهداری وضعیت حالت تاریک
+    const [colorTheme, setTheme] = useDarkMode(); 
+    const [darkSide, setdarkSide] = useState(colorTheme === 'light'); 
 
-    const [boards_length, setBoards_length] = useState(0); // استفاده از useState برای نگهداری تعداد بردها
-    const [all_boards, setAll_boards] = useState([]); // استفاده از useState برای نگهداری لیست تمام بردها
-    const [check, setCheck] = useState(1); // استفاده از useState برای ارسال پرس و جو به سرور در useEffect
+    const [boards_length, setBoards_length] = useState(0); 
+    const [all_boards, setAll_boards] = useState([]); 
+    const [check, setCheck] = useState(1); 
 
     useEffect(() => {
         (async () => {
-            const user_token = Cookies.get('token'); // دریافت توکن کاربر از کوکی‌ها
-
+            const user_token = Cookies.get('token');
             try {
                 const { data } = await axios.get("http://localhost:8088/api/user/boards", {
                     headers: {
-                        Authorization: `Bearer ${user_token}` // ارسال توکن به سرور به منظور احراز هویت
+                        Authorization: `Bearer ${user_token}` 
                     }
                 });
 
                 if (data) {
-                    setBoards_length(data.length); // تنظیم تعداد بردها از پاسخ دریافتی از سرور
-                    setAll_boards(data); // تنظیم لیست بردها از پاسخ دریافتی از سرور
+                    setBoards_length(data.length); 
+                    setAll_boards(data); 
                 }
             } catch (err) {
                 if (err.response.data === 'The token signature is invalid. ') {
-                    signoutHandler(); // فراخوانی تابع signoutHandler در صورت مشکل در احراز هویت
+                    signoutHandler(); 
                 }
             }
         })();
-    }, [check]); // استفاده از useEffect برای ارسال پرس و جو به سرور در هنگام تغییر check
+    }, [check]); 
 
     const toggleDarkMode = (checked) => {
-        setTheme(colorTheme); // تغییر حالت روشن یا تاریک در استفاده از useDarkMode
-        setdarkSide(checked); // تغییر حالت روشن یا تاریک در استفاده از useState
+        setTheme(colorTheme); 
+        setdarkSide(checked); 
     };
 
-    const [isBoardModalOpen, setIsBoardModalOpen] = useState(false); // استفاده از useState برای مدیریت نمایش مدال اضافه کردن برد
+    const [isBoardModalOpen, setIsBoardModalOpen] = useState(false); 
 
     const navigate = useNavigate(); // استفاده از useNavigate برای انتقال به صفحات مختلف در React Router
 
@@ -61,7 +60,7 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
     };
 
     const board_handle = (id) => {
-        navigate(`/home?=${id}`); // انتقال کاربر به برد مورد نظر بر اساس شناسه
+        navigate(`/home?=${id}`); 
     };
 
     const go_to_chart_page = () => {
@@ -69,16 +68,15 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
         setOpenDropdown(false);
     };
 
-    const go_to_dashboard = () => navigate('/home?=dashboard'); // انتقال کاربر به داشبورد
+    const go_to_dashboard = () => navigate('/home?=dashboard'); 
 
-    let [searchParams] = useSearchParams(); // استفاده از useSearchParams برای دریافت پارامترهای جستجو از URL
-    let queryParam = searchParams.get(""); // دریافت پارامترهای جستجوی مورد نظر از URL
+    let [searchParams] = useSearchParams(); 
+    let queryParam = searchParams.get(""); 
 
     return (
         <div>
             <div className={isSideBarOpen ? ' min-w-[261px] bg-[#416555] dark:bg-[#2b2c37] fixed top-[72px] h-screen items-center left-0 z-20 ' : ''}>
                 <div style={{ paddingTop: "100px" }}>
-                    {/* نمایش مدال اضافه کردن و ویرایش بردها */}
                     {isSideBarOpen && (
                         <div className='w-full rounded-xl bg-[#416555] dark:bg-[#2b2c37]'>
                             <h3 className=' dark:text-gray-300 text-gray-300 font-semibold mx-4 mb-8'>
@@ -137,10 +135,9 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                                         </p>
                                     </div>
 
-                                    {/* دکمه درباره ما */}
                                     <div
                                         onClick={() => {
-                                            window.location.href = '/aboutUs'; // استفاده از window.location.href برای انتقال به صفحه درباره ما
+                                            window.location.href = '/aboutUs'; 
                                         }}
                                         className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
                                                              text-green-300 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'
@@ -151,10 +148,9 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                                         </p>
                                     </div>
 
-                                    {/* دکمه تنظیمات */}
                                     <div
                                         onClick={() => {
-                                            window.location.href = '/ProfilePage'; // استفاده از window.location.href برای انتقال به صفحه تنظیمات
+                                            window.location.href = '/ProfilePage'; 
                                         }}
                                         className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
                     text-green-300 px-5 py-4 hover:bg-white hover:text-[#416555] dark:hover:bg-white'>
@@ -163,8 +159,6 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                                             تنظیمات
                                         </p>
                                     </div>
-
-                                    {/* دکمه خروج */}
                                     <div
                                         onClick={signoutHandler}
                                         className=' flex items-baseline space-x-2 mr-8 rounded-r-full duration-500 ease-in-out cursor-pointer
@@ -175,8 +169,6 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                                         </p>
                                     </div>
                                 </div>
-
-                                {/* بخش تغییر حالت روشن یا تاریک */}
                                 <div
                                     className=' mx-2 px-1 relative space-x-2 bg-[#416555] dark:bg-[#2b2c37] flex justify-center items-center rounded-lg'>
                                     <img src={lightIcon} alt="sun indicating light mode" />
@@ -200,8 +192,6 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                             </div>
                         </div>
                     )}
-
-                    {/* دکمه نمایش/عدم نمایش نوار کناری */}
                     {isSideBarOpen ? (
                         <div
                             onClick={() => setIsSideBarOpen(state => !state)}
@@ -220,8 +210,6 @@ function Sidebar({ isSideBarOpen, setIsSideBarOpen }) {
                     )}
                 </div>
             </div>
-
-            {/* نمایش مدال اضافه کردن و ویرایش برد اگر باز باشد */}
             {isBoardModalOpen &&
                 <AddEditBoardModal
                     type='add'

@@ -13,30 +13,29 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
   const [name, setName] = useState('');
   // وضعیت نام برد اصلی در حالت ویرایش
   const [name_avalie, setName_avalie] = useState('');
-  // وضعیت برای تشخیص اینکه آیا این اولین بار است که برد اضافه می‌شود یا خیر
   const [first_add, setFirst_add] = useState(false);
 
-  // وضعیت برای مدیریت ستون‌های جدید
+ 
   const [newColumns, setNewColumns] = useState([
     { name: 'شروع', task: [], id: uuidv4() },
     { name: 'پایان', task: [], id: uuidv4() },
   ]);
 
-  // توکن کاربر برای احراز هویت در درخواست‌های API
+
   const user_token = Cookies.get('token');
 
-  // دریافت پارامترهای جست‌وجو از URL
+  
   let [searchParams] = useSearchParams();
   let queryParam = searchParams.get('');
 
-  // هنگام بارگذاری کامپوننت بررسی می‌کند که آیا پارامتر جست‌وجو موجود نیست و اولین بار است که برد اضافه می‌شود
+
   useEffect(() => {
     if (!queryParam) setFirst_add(true);
   }, []);
 
   console.log('Board ID edit:', queryParam);
 
-  // بارگذاری داده‌های برد در صورت ویرایش یا ویرایش مجدد
+ 
   useEffect(() => {
     if (type === 'edit' || type === 'edit-2') {
       try {
@@ -47,7 +46,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
             },
           });
 
-          // تنظیم نام برد و ستون‌ها از داده‌های API
+  
           setName(data.boardName);
           setName_avalie(data.boardName);
 
@@ -63,9 +62,9 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
         console.log(err);
       }
     }
-  }, []); // فقط بارگذاری اولیه هنگام تغییر نوع یا پارامتر جست‌وجو
+  }, []);
 
-  // تغییر نام ستون با شناسه مشخص
+
   const onChange = (id, newValue) => {
     setNewColumns((prevState) => {
       const newState = [...prevState];
@@ -75,12 +74,11 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
     });
   };
 
-  // حذف ستون با شناسه مشخص
   const onDelete = (id) => {
     setNewColumns((prevState) => prevState.filter((el) => el.id !== id));
   };
 
-  // اعتبارسنجی ورودی‌های فرم
+
   const validate = () => {
     if (!name.trim()) {
       toast.error('قسمت نام خالیه');
@@ -99,7 +97,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
 
   const navigate = useNavigate();
 
-  // ارسال فرم برای اضافه کردن یا ویرایش برد
+ 
   const onSubmit = async () => {
     const isValid = validate();
     if (isValid) {
@@ -128,7 +126,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
           console.log(err);
           if (err.response.data === 'The token signature is invalid. ') {
             Cookies.remove('token');
-            navigate(0);  // بارگذاری مجدد صفحه در صورت اعتبارسنجی نامعتبر
+            navigate(0);  
           } else if (err.response.data === 'A board with the same name already exists for this user') {
             toast.error('برد با این نام وجود دارد');
           }
@@ -146,7 +144,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
 
           toast.success('تغییرات ذخیره شد.');
           setBoardModalOpen(false);
-          navigate(0);  // بارگذاری مجدد صفحه برای نمایش تغییرات
+          navigate(0); 
         } catch (err) {
           console.log(err);
         }
@@ -154,7 +152,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
     }
   };
 
-  // اضافه کردن ستون جدید بین ستون‌های موجود
+  
   const addNewColumnBetween = () => {
     const newColumn = { name: '', task: [], id: uuidv4() };
     const newColumnsArray = [...newColumns];
@@ -164,7 +162,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
   };
 
   return (
-    // پس‌زمینه مودال با قابلیت بستن از طریق کلیک در بیرون از محتوای مودال
+   
     <div
       onClick={(e) => {
         if (e.target !== e.currentTarget) {
@@ -186,7 +184,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
           {type === 'edit' ? 'ویرایش' : 'ساخت'} برد
         </h3>
 
-        {/* ورودی نام برد برای حالت‌های مختلف */}
+      
         {type !== 'edit-2' && (
           <div className="mt-8 flex flex-col space-y-1">
             <label className='text-sm dark:text-white text-gray-500'>
@@ -202,7 +200,7 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
           </div>
         )}
 
-        {/* لیست ستون‌های برد و امکان اضافه/حذف ستون */}
+  
         <div className='mt-8 flex flex-col space-y-3'>
           <label className='text-sm dark:text-white text-gray-500'>
             ستون‌های برد
@@ -235,13 +233,13 @@ function AddEditBoardModal({ setBoardModalOpen, type, setCheck }) {
         <div>
           <button
             className='w-full items-center hover:opacity-75 dark:text-[#416555] dark:bg-white text-white bg-[#416555] py-2 mt-2 rounded-full'
-            onClick={addNewColumnBetween}  // اضافه کردن ستون جدید
+            onClick={addNewColumnBetween} 
           >
             + اضافه کردن ستون جدید
           </button>
           <button
             className='w-full items-center hover:opacity-75 dark:text-white dark:bg-[#416555] text-white bg-[#416555] py-2 mt-8 rounded-full'
-            onClick={onSubmit}  // ارسال فرم برای اضافه/ویرایش برد
+            onClick={onSubmit}  
           >
             {type === 'add' ? 'ساخت برد جدید' : 'ذخیره ی تغییرات'}
           </button>

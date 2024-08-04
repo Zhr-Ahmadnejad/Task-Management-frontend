@@ -10,9 +10,7 @@ function AboutUs() {
   return (
 
     <div className="flex flex-col items-center justify-center h-screen bg-[#416555] dark:bg-white">
-      {/* کانتینر برای محتوای درباره ما با پس‌زمینه سفید و حاشیه‌های گرد */}
       <div className="bg-white dark:bg-[#416555] p-8 rounded-lg shadow-md flex flex-col items-center justify-center">
-        {/* لوگوی پروژه */}
         <img src={logo} alt="Logo" className="w-30 h-40 " />
         <div className="text-left mb-8">
           <h2 className="text-xl font-bold text-[#416555] dark:text-white">درباره ی تیم ما</h2>
